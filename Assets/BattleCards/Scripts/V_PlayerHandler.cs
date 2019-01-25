@@ -89,7 +89,7 @@ public class V_PlayerHandler : MonoBehaviour {
 	}
 
 	public void StartDraw(){
-		if (V_GameManager.playerTurn == V_GameManager.playerTypes.Us) {
+		if (V_GameManager.playerTurn == V_GameManager.playerTypes.Us) { //ugh bad. why is us a thing??
 			V_Card[] picks = new V_Card[] {
 				myDeck [Random.Range (0, myDeck.Length)],
 				myDeck [Random.Range (0, myDeck.Length)],

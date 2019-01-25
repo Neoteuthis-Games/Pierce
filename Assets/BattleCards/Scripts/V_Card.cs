@@ -22,9 +22,9 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(V_CardActions))]
 public class V_Card : MonoBehaviour , IPointerClickHandler {
 
-	public enum cardType {Creature, Spell};
-	public enum cardRank {Common, Uncommon, Unique};
-	public enum cardEffect {None, DrawNewCard, AddEnergy, AddHealth, DamagePlayer};
+	public enum cardType {Creature, Spell, Generator, Equipment, Virus, Item, Upgrade, Avatar}; //spells are events. will leave it like this for now.
+	public enum cardRank {Common, Uncommon, Unique, Uberunique, Event}; ///will rename rarities later too.
+	public enum cardEffect {None, DrawNewCard, AddEnergy, AddHealth, DamagePlayer}; //so many to add here. this will expand alot...
 	public enum cardTarget {None, ToUs, ToOpponent};
 	public enum usage {All, CardsOnly, BaseOnly,};
 	[Header("    Card Type:")]
@@ -36,8 +36,9 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	public string cardDescription = "Active: Deal 1 damage to a card or to the opponent player.";
 
 	[Header("    Attributes:")]
-	public int attackDamage = 1;
-	public int health = 2;
+	public int attackDamage = 10;
+	public int health = 20;
+    public int speed = 30;
 	public int energyCost = 1;
 	[Space]
 	[Header("                             -Extra Effects-")]
@@ -59,7 +60,8 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	public Text cardDamageHandler;
 	public Text cardHealthHandler;
 	public Text cardEnergyHandler;
-	[Space]
+    public Text cardSpeedHandler;
+    [Space]
 	[Header("    Miscs:")]
 	public GameObject selectedEffect;
 	public GameObject disabledEffect;
@@ -88,9 +90,23 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 		// If our V_CardActions component found a game manager then it means we're in a game.
 		// And if it's true then behave like in game:
 		if (cActions.gm) {
-			if (health <= 0) {
+			if (health <= 0)
+            {
 				health = 0;
 			}
+            if(attackDamage <= 0)
+            {
+                attackDamage = 0;
+            }
+            if(speed <= 0)
+            {
+                speed = 0;
+            }
+            if(energyCost < 0)
+            {
+                energyCost = 0;
+            }
+            //stop events from staying in play. disable this if we ever have a a lasting event.
 			if (type == cardType.Spell && autoUse == false) {
 				autoUse = true;
 			}
@@ -128,9 +144,13 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 		if (cardEnergyHandler != null) {
 			cardEnergyHandler.text = energyCost.ToString ();
 		}
-
-		// Disable scripts (including this) when in main menu:
-		if (UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name == "MainMenu") {
+        if (cardSpeedHandler != null)
+        {
+            cardSpeedHandler.text = energyCost.ToString();
+        }
+        // Disable scripts (including this) when in main menu:
+        ///wait why not just have a gamestate enum in the manager??? 
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name == "MainMenu") {//add gamestate to fix this...
 			cActions.enabled = false;
 			this.enabled = false;
 		}
@@ -216,7 +236,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	}
 
 	public void SpellActivate(){
-		Destroy (gameObject, delay);
+		Destroy (gameObject, delay); //oh no... ok I need persistance and a graveyard....
 		V_GameManager gm = FindObjectOfType<V_GameManager>();
 		if (gm.curSelected == this) {
 			gm.curSelected = null;

@@ -16,18 +16,22 @@ using UnityEngine.SceneManagement;
 ///    
 ///            Added: 2016
 /// </summary>
-
+ //I will be working with the game manager. Please talk to me before editing this yourself. ~Neo
 public class V_GameManager : MonoBehaviour {
 	
 	// Player types:
-	public enum playerTypes {Us, AI}
+	public enum playerTypes {Us, AI} //BAD! a template should be open to use with multiplayer -__-
+    // Gamestate types
+   // public enum currentState {begin, recharge, draw, action, war, end}
 
 	[Header("    Game Properties:")]
-	public int startingEnergy = 2;			// The starting energy for both players
-	public int increasingEnergy = 4;		// Energy increased every turn
-	public int startingHealth = 30;			// The starting health of a base
-	public int maxHealth = 30;				// The maximum health allowed for a base
-	public int drawCost = 2;				// Cost of refreshing the hand cards
+	public int startingEnergy = 5;			// The starting energy for both players
+    //public int refreshedEnergy = 5;         // The energy a player is set to during their recharge step
+	public int increasingEnergy = 0;        // Energy increased every turn - unneeded.
+    public int startingHealth = 30;         // The starting health of a base - unneeded.
+    public int maxHealth = 30;              // The maximum health allowed for a base - unneeded.
+    public int drawCost = 0;				// Cost of refreshing the hand cards - unneeded.
+
 	[Space]
 	[Header("    UI:")]
 	public GameObject DrawBTN;
