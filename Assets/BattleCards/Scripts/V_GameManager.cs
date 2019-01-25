@@ -22,7 +22,7 @@ public class V_GameManager : MonoBehaviour {
 	// Player types:
 	public enum playerTypes {Us, AI} //BAD! a template should be open to use with multiplayer -__-
     // Gamestate types
-   // public enum currentState {begin, recharge, draw, action, war, end}
+   public enum currentState {begin, recharge, draw, action, war, end}
 
 	[Header("    Game Properties:")]
 	public int startingEnergy = 5;			// The starting energy for both players
