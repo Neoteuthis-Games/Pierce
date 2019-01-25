@@ -67,13 +67,13 @@ public class V_PlayerHandler : MonoBehaviour {
 	}
 
 	public void EndTurn(){
-		gm.ChangeTurn (V_GameManager.playerTypes.Us);
+		gm.ChangeTurn (V_GameManager.playerTypes.Player);
 		gm.curSelected = null;
 		gm.aiCurSelected = null;
 	}
 
 	public void ReDraw(){
-		if (energy >= gm.drawCost && V_GameManager.playerTurn == V_GameManager.playerTypes.Us) {
+		if (energy >= gm.drawCost && V_GameManager.playerTurn == V_GameManager.playerTypes.Player) {
 			V_Card[] picks = new V_Card[] {
 				myDeck [Random.Range (0, myDeck.Length)],
 				myDeck [Random.Range (0, myDeck.Length)],
@@ -89,7 +89,7 @@ public class V_PlayerHandler : MonoBehaviour {
 	}
 
 	public void StartDraw(){
-		if (V_GameManager.playerTurn == V_GameManager.playerTypes.Us) { //ugh bad. why is us a thing??
+		if (V_GameManager.playerTurn == V_GameManager.playerTypes.Player) { //ugh bad. why is us a thing??
 			V_Card[] picks = new V_Card[] {
 				myDeck [Random.Range (0, myDeck.Length)],
 				myDeck [Random.Range (0, myDeck.Length)],

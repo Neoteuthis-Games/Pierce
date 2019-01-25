@@ -20,13 +20,14 @@ using UnityEngine.SceneManagement;
 public class V_GameManager : MonoBehaviour {
 	
 	// Player types:
-	public enum playerTypes {Us, AI} //BAD! a template should be open to use with multiplayer -__-
+	public enum playerTypes {Player, AI}; 
     // Gamestate types
-   public enum currentState {begin, recharge, draw, action, war, end}
+    public enum Gamestate {Menu, Overworld, InGame, Gameover, Deckbuilding, Shop, Paused, Story }; //general
+   public enum currentState {begin, recharge, draw, action, war, end}; //incardgame
 
 	[Header("    Game Properties:")]
 	public int startingEnergy = 5;			// The starting energy for both players
-    //public int refreshedEnergy = 5;         // The energy a player is set to during their recharge step
+    public int refreshedEnergy = 5;         // The energy a player is set to during their recharge step
 	public int increasingEnergy = 0;        // Energy increased every turn - unneeded.
     public int startingHealth = 30;         // The starting health of a base - unneeded.
     public int maxHealth = 30;              // The maximum health allowed for a base - unneeded.
@@ -113,7 +114,7 @@ public class V_GameManager : MonoBehaviour {
 		drawCostText.text = drawCost.ToString ();
 
 		// Draw the first hand cards:
-		playerTurn = playerTypes.Us;
+		playerTurn = playerTypes.Player;
 		p.gm = this;
 		p.StartDraw ();
 	}
@@ -164,7 +165,7 @@ public class V_GameManager : MonoBehaviour {
 		}
 
 		opponentsTurnText.gameObject.SetActive (playerTurn == playerTypes.AI && !isGameOver);
-		playersTurnText.gameObject.SetActive (playerTurn == playerTypes.Us && !isGameOver);
+		playersTurnText.gameObject.SetActive (playerTurn == playerTypes.Player && !isGameOver);
 	}
 	// This is called when a player hits the "End Turn" button:
 	public void ChangeTurn(playerTypes type){
@@ -177,14 +178,14 @@ public class V_GameManager : MonoBehaviour {
 				p.DrawOneCard ();
 			}
 			allowIncreasingEnergy = true;
-			playerTurn = playerTypes.Us;
+			playerTurn = playerTypes.Player;
 			gm.endTurnBTN.SetActive (true);
 			gm.DrawBTN.SetActive (true);
 			GameObject[] obj = GameObject.FindGameObjectsWithTag ("PlayerOwned");
 			foreach (GameObject o in obj) {
 				o.GetComponent<V_CardActions> ().isUsed = false;
 			}
-		} else if (type == playerTypes.Us) {
+		} else if (type == playerTypes.Player) {
 			if (allowIncreasingEnergy) {
 				V_AI.EffectAddEnergy (iEnergy);
 			}
@@ -244,7 +245,7 @@ public class V_GameManager : MonoBehaviour {
 	}
 
 	public void AttackPlayer(V_Card card, playerTypes who){
-		if (who == playerTypes.Us) {
+		if (who == playerTypes.Player) {
 			GameObject targetPlayer = GameObject.FindGameObjectWithTag ("Player");
 			card.cActions.UseToPlayer (targetPlayer);
 		}
@@ -273,7 +274,7 @@ public class V_GameManager : MonoBehaviour {
 		if (aiCurSelected != null) {
 			// if the card is usable to enemy bases then attack...
 			if (aiCurSelected.canBeUsedTo == V_Card.usage.All || aiCurSelected.canBeUsedTo == V_Card.usage.BaseOnly) {
-				AttackPlayer (aiCurSelected, playerTypes.Us);
+				AttackPlayer (aiCurSelected, playerTypes.Player);
 				aiCurSelected = null;
 			// ...else, restart the action:
 			} else {

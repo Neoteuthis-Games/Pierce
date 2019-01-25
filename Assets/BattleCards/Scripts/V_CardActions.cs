@@ -82,7 +82,7 @@ public class V_CardActions : MonoBehaviour {
 	}
 	
 	public void OnDrag(){
-		if (isInGame && V_GameManager.playerTurn == V_GameManager.playerTypes.Us && gameObject.tag != "PlayerOwned") {
+		if (isInGame && V_GameManager.playerTurn == V_GameManager.playerTypes.Player && gameObject.tag != "PlayerOwned") {
 			//Debug.Log ("Dragging Card...");
 			transform.position = Input.mousePosition;
 			transform.SetParent (V_GameManager.gameArea.transform);
@@ -121,7 +121,7 @@ public class V_CardActions : MonoBehaviour {
 		Srendrr.color = Color.white;
 
 		//Conditions for card depoyment:
-		if (isInGame && V_GameManager.playerTurn == V_GameManager.playerTypes.Us && gameObject.tag != "PlayerOwned") {
+		if (isInGame && V_GameManager.playerTurn == V_GameManager.playerTypes.Player && gameObject.tag != "PlayerOwned") {
 
 			// If this card is a CREATURE card, then do:
 			if (card.type == V_Card.cardType.Creature) {
@@ -194,7 +194,7 @@ public class V_CardActions : MonoBehaviour {
 
 	// Player card selecting actions:
 	public void Select(){
-		if (!isUsed && gameObject.tag == "PlayerOwned" && V_GameManager.playerTurn == V_GameManager.playerTypes.Us) {
+		if (!isUsed && gameObject.tag == "PlayerOwned" && V_GameManager.playerTurn == V_GameManager.playerTypes.Player) {
 			if (isSelected) {
 				gm.curSelected = null;
 				isSelected = false;

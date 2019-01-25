@@ -23,9 +23,11 @@ using UnityEngine.EventSystems;
 public class V_Card : MonoBehaviour , IPointerClickHandler {
 
 	public enum cardType {Creature, Spell, Generator, Equipment, Virus, Item, Upgrade, Avatar}; //spells are events. will leave it like this for now.
-	public enum cardRank {Common, Uncommon, Unique, Uberunique, Event}; ///will rename rarities later too.
+    public enum cardDomain {None, Animal, Plant, Spirit, Elemental, Fungus, Machine, Nightmare, }; //domains for the cards, generally only creatures will have a domain.
+    public enum cardSubDomain {None, Dust, Fire, Water,}; //generally elementals will have subtypes, but others may too.
+    public enum cardRank {Common, Uncommon, Unique, Uberunique, Event}; ///will rename rarities later too.
 	public enum cardEffect {None, DrawNewCard, AddEnergy, AddHealth, DamagePlayer}; //so many to add here. this will expand alot...
-	public enum cardTarget {None, ToUs, ToOpponent};
+	public enum cardTarget {None, ToPlayer, ToOpponent};
 	public enum usage {All, CardsOnly, BaseOnly,};
 	[Header("    Card Type:")]
 	public cardType type;
@@ -81,7 +83,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 
 	void Start(){
 		// Remove this if you also want the card animations to play in main menu:
-		GetComponentInChildren<Animator> ().enabled = UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name != "MainMenu";
+		GetComponentInChildren<Animator> ().enabled = UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name != "MainMenu"; //gamestate update
 	}
 
 	// Update is called once per frame
