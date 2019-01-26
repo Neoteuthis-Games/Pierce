@@ -24,14 +24,16 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 
 	public enum cardType {Creature, Spell, Generator, Equipment, Virus, Item, Upgrade, Avatar}; //spells are events. will leave it like this for now.
     public enum cardDomain {None, Animal, Plant, Spirit, Elemental, Fungus, Machine, Nightmare, }; //domains for the cards, generally only creatures will have a domain.
-    public enum cardSubDomain {None, Dust, Fire, Water,}; //generally elementals will have subtypes, but others may too.
-    public enum cardRank {Common, Uncommon, Unique, Uberunique, Event}; ///will rename rarities later too.
+    public enum cardSubDomain {None, Dust, Fire, Water, Lightning,}; //generally elementals will have subtypes, but others may too.
+    public enum cardRank {Common, Uncommon, Rare, UltraRare, Event}; 
 	public enum cardEffect {None, DrawNewCard, AddEnergy, AddHealth, DamagePlayer}; //so many to add here. this will expand alot...
 	public enum cardTarget {None, ToPlayer, ToOpponent};
 	public enum usage {All, CardsOnly, BaseOnly,};
 	[Header("    Card Type:")]
 	public cardType type;
-	[Header("    Card Rank:")]
+    public cardDomain domain;
+    public cardSubDomain subdomain;
+    [Header("    Card Rank:")]
 	public cardRank rank;
 	[Header("    Name & Description:")]
 	public string cardName = "Warrior";
@@ -59,7 +61,9 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	public Text cardNameHandler;
 	public Text cardDescriptionHandler;
 	public Text cardLevelHandler;
-	public Text cardDamageHandler;
+    public Text cardTypeHandler;
+    public Text cardDomainHandler;
+    public Text cardDamageHandler;
 	public Text cardHealthHandler;
 	public Text cardEnergyHandler;
     public Text cardSpeedHandler;
