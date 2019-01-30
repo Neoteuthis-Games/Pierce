@@ -22,7 +22,7 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(V_CardActions))]
 public class V_Card : MonoBehaviour , IPointerClickHandler {
 
-	public enum cardType {Creature, Spell, Generator, Equipment, Virus, Item, Upgrade, Avatar}; //spells are events. will leave it like this for now.
+	public enum cardType { Creature, Spell, Generator, Equipment, Virus, Item, Upgrade, Avatar }; //spells are events. will leave it like this for now.
     public enum cardDomain {None, Animal, Plant, Spirit, Elemental, Fungus, Machine, Nightmare, }; //domains for the cards, generally only creatures will have a domain.
     public enum cardSubDomain {None, Dust, Fire, Water, Lightning,}; //generally elementals will have subtypes, but others may too.
     public enum cardRank {Common, Uncommon, Rare, UltraRare, Event}; 
@@ -31,6 +31,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	public enum usage {All, CardsOnly, BaseOnly,};
 	[Header("    Card Type:")]
 	public cardType type;
+    [Header("    Card Domain:")]
     public cardDomain domain;
     public cardSubDomain subdomain;
     [Header("    Card Rank:")]

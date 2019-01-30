@@ -42,7 +42,7 @@ public class V_CardActions : MonoBehaviour {
 	void Start () {
 		// References:
 		gm = GameObject.FindObjectOfType<V_GameManager>();
-		card = GetComponent<V_Card> ();
+		card = gameObject.GetComponent<V_Card> ();
 		if (isInGame) {
 			curParent = V_GameManager.handZone.transform;
 			Brendrr = V_GameManager.battleZone.GetComponent<Image> ();
@@ -52,6 +52,7 @@ public class V_CardActions : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        
 		if (isUsed) {
 			card.disabledEffect.SetActive (true);
 		} else {
@@ -90,7 +91,8 @@ public class V_CardActions : MonoBehaviour {
 			// Let's have the zone flashing effect when this card is dragged over a certain zone.
 
 			//       If this card is a CREATURE card and this card is over the Battle Zone:
-			if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone) && card.type == V_Card.cardType.Creature) {
+			if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone) && card.type == V_Card.cardType.Creature)
+            {
 				Brendrr.color = Color.cyan;
 			}
 			//       But if not, then return the Battle Zone's color to default:
