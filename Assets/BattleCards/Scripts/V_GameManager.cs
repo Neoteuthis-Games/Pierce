@@ -20,7 +20,7 @@ using UnityEngine.SceneManagement;
 public class V_GameManager : MonoBehaviour {
 	
 	// Player types:
-	public enum playerTypes {Player, AI}; 
+	public enum playerTypes {Player, AI}; //it cycles through the enum, so we'll have to just call player2 AI in 2 player mode.
     // Gamestate types
     public enum Gamestate {Menu, Overworld, InGame, Gameover, Deckbuilding, Shop, Paused, Story }; //general
    public enum currentState {begin, recharge, draw, action, war, end}; //incardgame
@@ -101,6 +101,7 @@ public class V_GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        //need to add handlers for multiple new zones
 		battleZone = battleZoneHandler;
 		spellZone = spellZoneHandler;
 		handZone = handZoneHandler;
@@ -169,22 +170,28 @@ public class V_GameManager : MonoBehaviour {
 	}
 	// This is called when a player hits the "End Turn" button:
 	public void ChangeTurn(playerTypes type){
+        //modify this to create the stages of a turn. this is the recharge step. players can draw up to 2 cards and their energy becomes 5. now its talking about the players turn. we will edit this first.
 		if (type == playerTypes.AI) {
 			if (allowIncreasingEnergy) {
-				V_PlayerHandler.AddEnergy (iEnergy);
-			}
+                V_PlayerHandler.energy = 5;
+                //V_PlayerHandler.AddEnergy (iEnergy);
+            }
 			// Draw 1 free card if Hand Zone is'nt full:
-			if (handZone.transform.childCount < 4) {
-				p.DrawOneCard ();
-			}
-			allowIncreasingEnergy = true;
+			if (handZone.transform.childCount < 7) {//no max hand while drawing, only a discard step, but space is an issue here...
+				p.DrawOneCard();
+            }
+            if (handZone.transform.childCount < 7)
+            {
+                p.DrawOneCard();
+            }
+            allowIncreasingEnergy = true;
 			playerTurn = playerTypes.Player;
 			gm.endTurnBTN.SetActive (true);
 			gm.DrawBTN.SetActive (true);
 			GameObject[] obj = GameObject.FindGameObjectsWithTag ("PlayerOwned");
 			foreach (GameObject o in obj) {
 				o.GetComponent<V_CardActions> ().isUsed = false;
-			}
+			}//now its talking about the AI turn. lets ignore this for now.
 		} else if (type == playerTypes.Player) {
 			if (allowIncreasingEnergy) {
 				V_AI.EffectAddEnergy (iEnergy);
