@@ -297,12 +297,21 @@ public class V_GameManager : MonoBehaviour {
 	}
 
 	public void PlayerRedraw(){
+        //change this into drawing up to twice during the draw phase.
 		p.ReDraw ();
 	}
 	public void PlayerEndturn(){
 		p.EndTurn ();
 	}
 
+    public void ConvertToEnergy()
+    {
+        if(curSelected != null)
+        {
+            V_PlayerHandler.energy += curSelected.energyCost;
+            Destroy(curSelected.gameObject);
+        }
+    }
 	public void BackToScene(string sceneName){
 		SceneManager.LoadScene (sceneName);
 	}
