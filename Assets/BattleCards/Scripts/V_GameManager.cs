@@ -56,9 +56,11 @@ public class V_GameManager : MonoBehaviour {
 	public GameObject aiBattleZoneHandler;
 	public GameObject aiSpellZoneHandler;
 	public GameObject aiAvatarHandler;
-	public GameObject battleZoneHandler;
+    public GameObject aigraveZoneHandler;
+    public GameObject battleZoneHandler;
 	public GameObject spellZoneHandler;
-	public GameObject handZoneHandler;
+    public GameObject graveZoneHandler;
+    public GameObject handZoneHandler;
 	public GameObject gameAreaHandler;
 	public GameObject avatarHandler;
 	[Space]
@@ -86,12 +88,14 @@ public class V_GameManager : MonoBehaviour {
 	public static GameObject battleZone;
 	public static GameObject spellZone;
 	public static GameObject handZone;
-	public static GameObject gameArea;
+    public static GameObject graveZone;
+    public static GameObject gameArea;
 	public static GameObject avatarZone;
 	public static GameObject aiBattleZone;
 	public static GameObject aiSpellZone;
 	public static GameObject aiAvatarZone;
-	public static bool allowIncreasingEnergy = false;
+    public static GameObject aigraveZone;
+    public static bool allowIncreasingEnergy = false;
 
 	[HideInInspector] public bool isGameOver = false;
 
@@ -106,9 +110,11 @@ public class V_GameManager : MonoBehaviour {
 		spellZone = spellZoneHandler;
 		handZone = handZoneHandler;
 		gameArea = gameAreaHandler;
+        graveZone = graveZoneHandler;
 		aiBattleZone = aiBattleZoneHandler;
 		aiSpellZone = aiSpellZoneHandler;
 		aiAvatarZone = aiAvatarHandler;
+        aigraveZone = aigraveZoneHandler;
 		avatarZone = avatarHandler;
 		sdamageEffect = damageEffect;
 		shealEffect = healEffect;

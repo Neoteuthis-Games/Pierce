@@ -31,7 +31,8 @@ public class V_CardActions : MonoBehaviour {
 	//private variables:
 	private Image Brendrr;
 	private Image Srendrr;
-
+    //number of cards allowed in play, we can make public if things modify it.
+    private int fieldlimit = 6;
 	public bool IsCursorInZone(Vector2 cursor, GameObject zone)
 	{
 		Vector2 localPos = zone.transform.InverseTransformPoint(cursor);
@@ -102,6 +103,7 @@ public class V_CardActions : MonoBehaviour {
 			}
 
 			//       If this card is a SPELL card and this card is over the Spell Zone:
+            ///this doesn't need to be seperate. the battlezone is the battlezone...
 			if (IsCursorInZone (Input.mousePosition, V_GameManager.spellZone) && card.type == V_Card.cardType.Spell) {
 				Srendrr.color = Color.cyan;
 			}
@@ -126,12 +128,13 @@ public class V_CardActions : MonoBehaviour {
 		if (isInGame && V_GameManager.playerTurn == V_GameManager.playerTypes.Player && gameObject.tag != "PlayerOwned") {
 
 			// If this card is a CREATURE card, then do:
+            //ok this area we will need to modify ALOT.
 			if (card.type == V_Card.cardType.Creature) {
 				if (curParent == V_GameManager.handZone.transform) {
 					if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone)) {
 						Debug.Log ("It's a Creature!");
 						if (card.energyCost <= V_PlayerHandler.energy) {
-							if (gm.battleZoneHandler.transform.childCount < 6) {
+							if (gm.battleZoneHandler.transform.childCount < fieldlimit) {
 								V_PlayerHandler.energy -= card.energyCost;
 								transform.SetParent (V_GameManager.battleZone.transform);
 								curParent = V_GameManager.battleZone.transform;
@@ -294,11 +297,22 @@ public class V_CardActions : MonoBehaviour {
 	}
 
 	public void DestroyThisCard(){
+        //send to graveyard instead
 		V_Card thisCard = card;
 		if (thisCard.health <= 0) {
 			Instantiate (thisCard.deathEffect, thisCard.transform);
-			Destroy (gameObject, 1f);
-		}
-	}
+            if (gameObject.tag == "PlayerOwned")
+             {
+                 gameObject.tag = "InGrave";
+                transform.SetParent(V_GameManager.graveZone.transform);
+                 curParent = V_GameManager.graveZone.transform;
+                
+            }
+            else
+            {
+                Destroy (gameObject, 1f);
+            }
+        }
+    }
 }
 

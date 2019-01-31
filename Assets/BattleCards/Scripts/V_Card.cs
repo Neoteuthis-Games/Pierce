@@ -113,7 +113,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
             {
                 energyCost = 0;
             }
-            //stop events from staying in play. disable this if we ever have a a lasting event.
+            //stop event cards from staying in play. disable this if we ever have a a lasting event.
 			if (type == cardType.Spell && autoUse == false) {
 				autoUse = true;
 			}
@@ -153,7 +153,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 		}
         if (cardSpeedHandler != null)
         {
-            cardSpeedHandler.text = energyCost.ToString();
+            cardSpeedHandler.text = speed.ToString();
         }
         // Disable scripts (including this) when in main menu:
         ///wait why not just have a gamestate enum in the manager??? 
