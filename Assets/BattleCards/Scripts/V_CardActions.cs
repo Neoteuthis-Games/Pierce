@@ -274,15 +274,58 @@ public class V_CardActions : MonoBehaviour {
 			}
 		}
 	}
+    ///This will be for once we add gewnerators to the game.
+    //public void UsetoGenerator(V_Card target)
+    //{
+    //    V_Card thisCard = card;
+    //    Debug.Log("AI attacked!");
+    //    if (target.gameObject.tag == "AIOwned" && this.tag == "PlayerOwned")
+    //    {
+    //        if (thisCard.type == V_Card.cardType.Creature)
+    //        {
+    //            // We damaged effect:
+    //            Text us = Instantiate(V_GameManager.sdamageEffect, thisCard.transform) as Text;
+    //            us.text = "-" + target.attackDamage;
+    //            //
+    //            target.health -= thisCard.attackDamage;
+    //            thisCard.health -= target.attackDamage;
+    //            target.cardHealthHandler.text = target.health.ToString();
+    //            thisCard.cardHealthHandler.text = thisCard.health.ToString();
+    //            thisCard.DoEffect();
+    //            DestroyThisCard();
+    //            target.cActions.DestroyThisCard();
+    //            isUsed = true;
+    //        }
+    //    }
+    //    if (target.gameObject.tag == "PlayerOwned" && this.tag == "AIOwned")
+    //    {
+    //        if (thisCard.type == V_Card.cardType.Creature)
+    //        {
+    //            Debug.Log("AI attacked!");
+    //            // Enemy damaged effect:
+    //            Text enemy = Instantiate(V_GameManager.sdamageEffect, target.transform) as Text;
+    //            enemy.text = "-" + thisCard.attackDamage;
+    //            //
+    //            target.health -= thisCard.attackDamage;
+    //            thisCard.health -= target.attackDamage;
+    //            target.cardHealthHandler.text = target.health.ToString();
+    //            thisCard.cardHealthHandler.text = thisCard.health.ToString();
+    //            thisCard.DoEffect();
+    //            DestroyThisCard();
+    //            target.cActions.DestroyThisCard();
+    //            isUsed = true;
+    //        }
+    //    }
+    //}
 
-	public void UseToPlayer(GameObject target){
+    public void UseToPlayer(GameObject target){
 		V_Card thisCard = card;
 		Debug.Log ("AI attacked!");
 		if (target.tag == "Player") {
 			if (thisCard.type == V_Card.cardType.Creature) {
 				// Enemy damaged effect:
 				Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
-				enemy.text = "-" + thisCard.attackDamage;
+				enemy.text = "-" + thisCard.energyCost;
                 //
                 V_PlayerHandler.health -= thisCard.energyCost;
 				isUsed = true;
@@ -292,7 +335,7 @@ public class V_CardActions : MonoBehaviour {
 			if (thisCard.type == V_Card.cardType.Creature) {
 				// Enemy damaged effect:
 				Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
-				enemy.text = "-" + thisCard.attackDamage;
+				enemy.text = "-" + thisCard.energyCost;
 				//
 				V_AI.health -= thisCard.energyCost;
 				isUsed = true;
