@@ -245,7 +245,9 @@ public class V_CardActions : MonoBehaviour {
 				//
 				target.health -= thisCard.attackDamage;
 				thisCard.health -= target.attackDamage;
-				thisCard.DoEffect ();
+                target.cardHealthHandler.text = target.health.ToString();
+                thisCard.cardHealthHandler.text = thisCard.health.ToString();
+                thisCard.DoEffect ();
 				DestroyThisCard ();
 				target.cActions.DestroyThisCard ();
 				isUsed = true;
@@ -262,7 +264,9 @@ public class V_CardActions : MonoBehaviour {
 				us.text = "-" + target.attackDamage;
 				//
 				target.health -= thisCard.attackDamage;
-				thisCard.health -= target.attackDamage;
+                thisCard.health -= target.attackDamage;
+                target.cardHealthHandler.text = target.health.ToString();
+                thisCard.cardHealthHandler.text = thisCard.health.ToString();
 				thisCard.DoEffect ();
 				DestroyThisCard ();
 				target.cActions.DestroyThisCard ();
@@ -279,8 +283,8 @@ public class V_CardActions : MonoBehaviour {
 				// Enemy damaged effect:
 				Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
 				enemy.text = "-" + thisCard.attackDamage;
-				//
-				V_PlayerHandler.health -= thisCard.attackDamage;
+                //
+                V_PlayerHandler.health -= thisCard.energyCost;
 				isUsed = true;
 			}
 		}
@@ -290,7 +294,7 @@ public class V_CardActions : MonoBehaviour {
 				Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
 				enemy.text = "-" + thisCard.attackDamage;
 				//
-				V_AI.health -= thisCard.attackDamage;
+				V_AI.health -= thisCard.energyCost;
 				isUsed = true;
 			}
 		}
