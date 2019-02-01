@@ -123,6 +123,8 @@ public class V_GameManager : MonoBehaviour {
 		// Draw the first hand cards:
 		playerTurn = playerTypes.Player;
 		p.gm = this;
+        //this is what we need to use to set the health to the size of the deck. we can disable it for now.
+        ///V_PlayerHandler.health = p.myDeck.Length;
 		p.StartDraw ();
 	}
 
