@@ -120,7 +120,7 @@ public class V_GameManager : MonoBehaviour {
 		avatarZone = avatarHandler;
 		sdamageEffect = damageEffect;
 		shealEffect = healEffect;
-		//drawCostText.text = drawCost.ToString ();
+		drawCostText.text = drawCost.ToString ();
 
 		// Draw the first hand cards:
 		playerTurn = playerTypes.Player;
