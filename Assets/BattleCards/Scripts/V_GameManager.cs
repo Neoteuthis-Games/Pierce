@@ -32,7 +32,8 @@ public class V_GameManager : MonoBehaviour {
     public int startingHealth = 30;         // The starting health of a base - unneeded.
     public int maxHealth = 30;              // The maximum health allowed for a base - unneeded.
     public int drawCost = 0;				// Cost of refreshing the hand cards - unneeded.
-
+    public const int freedrawnum = 2;
+    public int freedraws = freedrawnum;
 	[Space]
 	[Header("    UI:")]
 	public GameObject DrawBTN;
@@ -78,6 +79,7 @@ public class V_GameManager : MonoBehaviour {
 
 	// Some static variables for other script's reference:
 	public static playerTypes playerTurn;
+    public static currentState cardgamestate;
 	public static Text sdamageEffect;
 	public static Text shealEffect;
 	public static int curEnergy;
@@ -118,7 +120,7 @@ public class V_GameManager : MonoBehaviour {
 		avatarZone = avatarHandler;
 		sdamageEffect = damageEffect;
 		shealEffect = healEffect;
-		drawCostText.text = drawCost.ToString ();
+		//drawCostText.text = drawCost.ToString ();
 
 		// Draw the first hand cards:
 		playerTurn = playerTypes.Player;
@@ -186,11 +188,12 @@ public class V_GameManager : MonoBehaviour {
             }
 			// Draw 1 free card if Hand Zone is'nt full:
 			if (handZone.transform.childCount < 7) {//no max hand while drawing, only a discard step, but space is an issue here...
-				p.DrawOneCard();
+                V_GameManager.cardgamestate = V_GameManager.currentState.draw;
+               // p.DrawOneCard();
             }
             if (handZone.transform.childCount < 7)
             {
-                p.DrawOneCard();
+                //p.DrawOneCard();
             }
             allowIncreasingEnergy = true;
 			playerTurn = playerTypes.Player;
@@ -313,7 +316,11 @@ public class V_GameManager : MonoBehaviour {
 
 	public void PlayerRedraw(){
         //change this into drawing up to twice during the draw phase.
-		p.ReDraw ();
+        if (V_GameManager.cardgamestate == V_GameManager.currentState.draw)
+        {
+            p.DrawOneCard();
+        }
+		//p.ReDraw ();
 	}
 	public void PlayerEndturn(){
 		p.EndTurn ();

@@ -92,7 +92,7 @@ public class V_CardActions : MonoBehaviour {
 			// Let's have the zone flashing effect when this card is dragged over a certain zone.
 
 			//       If this card is a CREATURE card and this card is over the Battle Zone:
-			if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone) && card.type == V_Card.cardType.Creature)
+			if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone) && card.type == V_Card.cardType.Creature || IsCursorInZone(Input.mousePosition, V_GameManager.battleZone) && card.type == V_Card.cardType.Spell)
             {
 				Brendrr.color = Color.cyan;
 			}
@@ -104,14 +104,13 @@ public class V_CardActions : MonoBehaviour {
 
 			//       If this card is a SPELL card and this card is over the Spell Zone:
             ///this doesn't need to be seperate. the battlezone is the battlezone...
-			if (IsCursorInZone (Input.mousePosition, V_GameManager.spellZone) && card.type == V_Card.cardType.Spell) {
-				Srendrr.color = Color.cyan;
-			}
-			//       But if not, then return the Spell Zone's color to default:
-			else 
-			{
-				Srendrr.color = Color.white;
-			}
+			//if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone) && card.type == V_Card.cardType.Spell) {
+			//	Brendrr.color = Color.cyan;
+			//}else
+			////       But if not, then return the Spell Zone's color to default:
+			//{
+			//	Brendrr.color = Color.white;
+			//}
 		}
 	}
 	public void OnDrop(){
@@ -167,11 +166,11 @@ public class V_CardActions : MonoBehaviour {
 		    //    actions when dropped:
 			} else {
 				if (curParent == V_GameManager.handZone.transform) {
-					if (IsCursorInZone (Input.mousePosition, V_GameManager.spellZone)) {
+					if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone)) {
 						if (card.energyCost <= V_PlayerHandler.energy) {
 							V_PlayerHandler.energy -= card.energyCost;
-							transform.SetParent (V_GameManager.spellZone.transform);
-							curParent = V_GameManager.spellZone.transform;
+							transform.SetParent (V_GameManager.battleZone.transform);
+							curParent = V_GameManager.battleZone.transform;
 							gameObject.tag = "PlayerOwned";
 							// Do the SPELL effect:
 							card.DoEffect ();
@@ -182,7 +181,7 @@ public class V_CardActions : MonoBehaviour {
 							curParent = V_GameManager.handZone.transform;
 						}
 					} else {
-						if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone)) {
+						if (IsCursorInZone (Input.mousePosition, V_GameManager.spellZone)) {
 							// Display error:
 							gm.DisplayError (gm.cantPlaceThere);
 						}
