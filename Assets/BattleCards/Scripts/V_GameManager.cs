@@ -34,6 +34,7 @@ public class V_GameManager : MonoBehaviour {
     public int drawCost = 0;				// Cost of refreshing the hand cards - unneeded.
     public const int freedrawnum = 2;
     public int freedraws = freedrawnum;
+    public static int effectdraw = 0;
     public int startinghand = 5;
 	[Space]
 	[Header("    UI:")]
@@ -218,16 +219,20 @@ public class V_GameManager : MonoBehaviour {
             //////////////////////////////////////
            }//now its talking about the AI turn. lets ignore this for now.
 		} else if (type == playerTypes.Player) {
-			if (allowIncreasingEnergy) {
+            cardgamestate = currentState.begin;
+            cardgamestate = currentState.recharge;
+            if (allowIncreasingEnergy) {
 				V_AI.EffectAddEnergy (iEnergy);
 			}
 			allowIncreasingEnergy = true;
 			playerTurn = playerTypes.AI;
-			GameObject[] obj = GameObject.FindGameObjectsWithTag ("AIOwned");
+            V_GameManager.cardgamestate = V_GameManager.currentState.draw;
+            GameObject[] obj = GameObject.FindGameObjectsWithTag ("AIOwned");
 			foreach (GameObject o in obj) {
 				o.GetComponent<V_CardActions> ().isUsed = false;
 			}
-		}
+            V_GameManager.cardgamestate = V_GameManager.currentState.action;
+        }
 	}
 
 	/// <summary>
@@ -328,7 +333,7 @@ public class V_GameManager : MonoBehaviour {
 		}
 	}
 
-	public void PlayerRedraw(){
+	public void PlayerRedraw(){//the deck links to this. 
         //change this into drawing up to twice during the draw phase.
         if (V_GameManager.cardgamestate == V_GameManager.currentState.draw)// || initialsetup == true)
         {
@@ -340,14 +345,17 @@ public class V_GameManager : MonoBehaviour {
             {
                 V_GameManager.cardgamestate++;
             }
-        } else
+        } else if(effectdraw > 0)
         {
+            effectdraw--;
             p.DrawOneCard();
         }
 		//p.ReDraw ();
 	}
 	public void PlayerEndturn(){
-		p.EndTurn ();
+        cardgamestate = 0;
+        freedraws = freedrawnum;
+        p.EndTurn ();
 	}
 
     public void EndPhase()
@@ -357,8 +365,6 @@ public class V_GameManager : MonoBehaviour {
             cardgamestate++;
         } else
         {
-            cardgamestate = 0;
-            freedraws = freedrawnum;
             PlayerEndturn();
         }
     }

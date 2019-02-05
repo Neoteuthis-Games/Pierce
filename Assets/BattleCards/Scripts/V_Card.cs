@@ -24,9 +24,9 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 
 	public enum cardType { Creature, Spell, Generator, Equipment, Virus, Item, Upgrade, Avatar }; //spells are events. will leave it like this for now.
     public enum cardDomain {None, Animal, Plant, Spirit, Elemental, Fungus, Machine, Nightmare, }; //domains for the cards, generally only creatures will have a domain.
-    public enum cardSubDomain {None, Dust, Fire, Water, Lightning,}; //generally elementals will have subtypes, but others may too.
+    public enum cardSubDomain {None, Dust, Fire, Water, Lightning, Wind,}; //generally elementals will have subtypes, but others may too.
     public enum cardRank {Common, Uncommon, Rare, UltraRare, Event}; 
-	public enum cardEffect {None, DrawNewCard, AddEnergy, AddHealth, DamagePlayer}; //so many to add here. this will expand alot...
+	public enum cardEffect {None, DrawXCards, AddEnergy, AddHealth, DamagePlayer, DrawuptoXcards, }; //so many to add here. this will expand alot...
 	public enum cardTarget {None, ToPlayer, ToOpponent};
 	public enum usage {All, CardsOnly, BaseOnly,};
 	[Header("    Card Type:")]
@@ -199,15 +199,32 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 					V_PlayerHandler.EffectDamage (effectValue, V_GameManager.sdamageEffect.gameObject, V_GameManager.avatarZone.transform);
 				}
 			}
-			if (extraEffect == cardEffect.DrawNewCard) {
+			if (extraEffect == cardEffect.DrawXCards) {
 				if (target == cardTarget.ToOpponent) {
 					// nothing here yet...
 				} else {
 					V_PlayerHandler player = FindObjectOfType<V_PlayerHandler> ();
-					player.DrawOneCard();
+                    //draw x cards
+                    for (int i = effectValue; i > 0; i--)
+                    {
+                        player.DrawOneCard();
+                    }
 				}
 			}
-		}
+            if (extraEffect == cardEffect.DrawuptoXcards)
+            {
+                if (target == cardTarget.ToOpponent)
+                {
+                    // nothing here yet...
+                }
+                else
+                {
+                    V_PlayerHandler player = FindObjectOfType<V_PlayerHandler>();
+                    //draw up to x cards
+                    V_GameManager.effectdraw = effectValue;
+                }
+            }
+        }
 		if (type == cardType.Spell) {
 			SpellActivate ();
 		}

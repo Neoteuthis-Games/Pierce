@@ -321,7 +321,8 @@ public class V_CardActions : MonoBehaviour {
 		V_Card thisCard = card;
 		Debug.Log ("AI attacked!");
 		if (target.tag == "Player") {
-			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.cardgamestate == V_GameManager.currentState.war) {
+            V_GameManager.cardgamestate = V_GameManager.currentState.war; //testing
+            if (thisCard.type == V_Card.cardType.Creature && V_GameManager.cardgamestate == V_GameManager.currentState.war) {
 				// Enemy damaged effect:
 				Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
 				enemy.text = "-" + thisCard.energyCost;
