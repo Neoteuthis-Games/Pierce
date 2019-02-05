@@ -124,8 +124,8 @@ public class V_CardActions : MonoBehaviour {
 		Srendrr.color = Color.white;
 
 		//Conditions for card depoyment:
-		if (isInGame && V_GameManager.playerTurn == V_GameManager.playerTypes.Player && gameObject.tag != "PlayerOwned") {
-
+		if (isInGame && V_GameManager.playerTurn == V_GameManager.playerTypes.Player && gameObject.tag != "PlayerOwned"){// && V_GameManager.cardgamestate == V_GameManager.currentState.action) {
+            //WE NEED TO MODIFY THIS FOR CARDS THAT CAN BE PLAYED OUTSIDE THE ACTION PHASE.
 			// If this card is a CREATURE card, then do:
             //ok this area we will need to modify ALOT.
 			if (card.type == V_Card.cardType.Creature) {
@@ -133,7 +133,7 @@ public class V_CardActions : MonoBehaviour {
 					if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone)) {
 						Debug.Log ("It's a Creature!");
 						if (card.energyCost <= V_PlayerHandler.energy) {
-							if (gm.battleZoneHandler.transform.childCount < fieldlimit) {
+							if (gm.battleZoneHandler.transform.childCount < fieldlimit && V_GameManager.cardgamestate == V_GameManager.currentState.action) {
 								V_PlayerHandler.energy -= card.energyCost;
 								transform.SetParent (V_GameManager.battleZone.transform);
 								curParent = V_GameManager.battleZone.transform;
@@ -167,7 +167,7 @@ public class V_CardActions : MonoBehaviour {
 			} else {
 				if (curParent == V_GameManager.handZone.transform) {
 					if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone)) {
-						if (card.energyCost <= V_PlayerHandler.energy) {
+						if (card.energyCost <= V_PlayerHandler.energy && V_GameManager.cardgamestate == V_GameManager.currentState.action) {
 							V_PlayerHandler.energy -= card.energyCost;
 							transform.SetParent (V_GameManager.battleZone.transform);
 							curParent = V_GameManager.battleZone.transform;
@@ -234,7 +234,7 @@ public class V_CardActions : MonoBehaviour {
 		V_Card thisCard = card;
 		Debug.Log ("AI attacked!");
 		if (target.gameObject.tag == "AIOwned" && this.tag == "PlayerOwned") {
-			if (thisCard.type == V_Card.cardType.Creature) {
+			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.cardgamestate == V_GameManager.currentState.war) {
 				// Enemy damaged effect:
 				Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
 				enemy.text = "-" + thisCard.attackDamage;
@@ -253,7 +253,7 @@ public class V_CardActions : MonoBehaviour {
 			}
 		}
 		if (target.gameObject.tag == "PlayerOwned" && this.tag == "AIOwned") {
-			if (thisCard.type == V_Card.cardType.Creature) {
+			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.cardgamestate == V_GameManager.currentState.war) {
 				Debug.Log ("AI attacked!");
 				// Enemy damaged effect:
 				Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
@@ -321,7 +321,7 @@ public class V_CardActions : MonoBehaviour {
 		V_Card thisCard = card;
 		Debug.Log ("AI attacked!");
 		if (target.tag == "Player") {
-			if (thisCard.type == V_Card.cardType.Creature) {
+			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.cardgamestate == V_GameManager.currentState.war) {
 				// Enemy damaged effect:
 				Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
 				enemy.text = "-" + thisCard.energyCost;
@@ -331,7 +331,7 @@ public class V_CardActions : MonoBehaviour {
 			}
 		}
 		if (target.tag == "AIPlayer") {
-			if (thisCard.type == V_Card.cardType.Creature) {
+			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.cardgamestate == V_GameManager.currentState.war) {
 				// Enemy damaged effect:
 				Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
 				enemy.text = "-" + thisCard.energyCost;
