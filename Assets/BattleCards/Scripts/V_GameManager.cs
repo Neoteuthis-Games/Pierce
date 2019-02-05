@@ -128,7 +128,7 @@ public class V_GameManager : MonoBehaviour {
 		playerTurn = playerTypes.Player;
 		p.gm = this;
         //this is what we need to use to set the health to the size of the deck. we can disable it for now.
-        V_PlayerHandler.health = p.myDeck.Length;
+       // V_PlayerHandler.health = p.myDeck.Length;
 		p.StartDraw ();
         for (int i = 0; i < startinghand; i++)
         {
@@ -334,6 +334,18 @@ public class V_GameManager : MonoBehaviour {
 	public void PlayerEndturn(){
 		p.EndTurn ();
 	}
+
+    public void EndPhase()
+    {
+        if(cardgamestate!= currentState.end)
+        {
+            cardgamestate++;
+        } else
+        {
+            cardgamestate = 0;
+            PlayerEndturn();
+        }
+    }
 
     public void ConvertToEnergy()
     {
