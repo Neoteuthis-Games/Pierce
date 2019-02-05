@@ -99,6 +99,7 @@ public class V_PlayerHandler : MonoBehaviour {
 			};
 			gm.Redraw (picks);
 		}
+        V_GameManager.initialsetup = false;
 	}
 
 	public void DrawOneCard(){

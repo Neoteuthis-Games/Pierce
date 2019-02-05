@@ -34,6 +34,7 @@ public class V_GameManager : MonoBehaviour {
     public int drawCost = 0;				// Cost of refreshing the hand cards - unneeded.
     public const int freedrawnum = 2;
     public int freedraws = freedrawnum;
+    public int startinghand = 5;
 	[Space]
 	[Header("    UI:")]
 	public GameObject DrawBTN;
@@ -80,6 +81,7 @@ public class V_GameManager : MonoBehaviour {
 	// Some static variables for other script's reference:
 	public static playerTypes playerTurn;
     public static currentState cardgamestate;
+    public static bool initialsetup = true;
 	public static Text sdamageEffect;
 	public static Text shealEffect;
 	public static int curEnergy;
@@ -126,9 +128,15 @@ public class V_GameManager : MonoBehaviour {
 		playerTurn = playerTypes.Player;
 		p.gm = this;
         //this is what we need to use to set the health to the size of the deck. we can disable it for now.
-        ///V_PlayerHandler.health = p.myDeck.Length;
+        V_PlayerHandler.health = p.myDeck.Length;
 		p.StartDraw ();
-	}
+        for (int i = 0; i < startinghand; i++)
+        {
+            p.DrawOneCard();
+        }
+
+
+    }
 
 	void Awake(){
 		// References:
@@ -146,7 +154,8 @@ public class V_GameManager : MonoBehaviour {
 
 		sEnergy = startingEnergy;
 		iEnergy = increasingEnergy;
-	}
+      
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -189,7 +198,7 @@ public class V_GameManager : MonoBehaviour {
 			// Draw 1 free card if Hand Zone is'nt full:
 			if (handZone.transform.childCount < 7) {//no max hand while drawing, only a discard step, but space is an issue here...
                 V_GameManager.cardgamestate = V_GameManager.currentState.draw;
-               // p.DrawOneCard();
+              //p.DrawOneCard();
             }
             if (handZone.transform.childCount < 7)
             {
@@ -316,7 +325,7 @@ public class V_GameManager : MonoBehaviour {
 
 	public void PlayerRedraw(){
         //change this into drawing up to twice during the draw phase.
-        if (V_GameManager.cardgamestate == V_GameManager.currentState.draw)
+        if (V_GameManager.cardgamestate == V_GameManager.currentState.draw || initialsetup == true)
         {
             p.DrawOneCard();
         }
