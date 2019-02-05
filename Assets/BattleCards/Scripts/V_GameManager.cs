@@ -190,28 +190,31 @@ public class V_GameManager : MonoBehaviour {
 	// This is called when a player hits the "End Turn" button:
 	public void ChangeTurn(playerTypes type){
         //modify this to create the stages of a turn. this is the recharge step. players can draw up to 2 cards and their energy becomes 5. now its talking about the players turn. we will edit this first.
-		if (type == playerTypes.AI) {
-			if (allowIncreasingEnergy) {
-                V_PlayerHandler.energy = 5;
-                //V_PlayerHandler.AddEnergy (iEnergy);
-            }
-			// Draw 1 free card if Hand Zone is'nt full:
-			if (handZone.transform.childCount < 7) {//no max hand while drawing, only a discard step, but space is an issue here...
-                V_GameManager.cardgamestate = V_GameManager.currentState.draw;
-              //p.DrawOneCard();
-            }
-            if (handZone.transform.childCount < 7)
-            {
-                //p.DrawOneCard();
-            }
-            allowIncreasingEnergy = true;
+        
+        if (type == playerTypes.AI) {
+            cardgamestate = currentState.begin;
+             allowIncreasingEnergy = true;
 			playerTurn = playerTypes.Player;
 			gm.endTurnBTN.SetActive (true);
 			gm.DrawBTN.SetActive (true);
 			GameObject[] obj = GameObject.FindGameObjectsWithTag ("PlayerOwned");
 			foreach (GameObject o in obj) {
 				o.GetComponent<V_CardActions> ().isUsed = false;
-			}//now its talking about the AI turn. lets ignore this for now.
+
+			//check for begin turn effects here
+
+            cardgamestate = currentState.recharge;
+
+            if (allowIncreasingEnergy) {
+                V_PlayerHandler.energy = 5;
+                //V_PlayerHandler.AddEnergy (iEnergy);
+            }
+			if (handZone.transform.childCount > 7) {
+               //make players discard down to 7 cards.
+            }
+            V_GameManager.cardgamestate = V_GameManager.currentState.draw;
+            //////////////////////////////////////
+           }//now its talking about the AI turn. lets ignore this for now.
 		} else if (type == playerTypes.Player) {
 			if (allowIncreasingEnergy) {
 				V_AI.EffectAddEnergy (iEnergy);
@@ -325,7 +328,12 @@ public class V_GameManager : MonoBehaviour {
 
 	public void PlayerRedraw(){
         //change this into drawing up to twice during the draw phase.
-        if (V_GameManager.cardgamestate == V_GameManager.currentState.draw || initialsetup == true)
+        if (V_GameManager.cardgamestate == V_GameManager.currentState.draw)// || initialsetup == true)
+        {
+            freedraws--;
+            if(freedraws>=0)
+            p.DrawOneCard();
+        } else
         {
             p.DrawOneCard();
         }
@@ -343,6 +351,7 @@ public class V_GameManager : MonoBehaviour {
         } else
         {
             cardgamestate = 0;
+            freedraws = freedrawnum;
             PlayerEndturn();
         }
     }
