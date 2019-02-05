@@ -32,7 +32,7 @@ public class V_CardActions : MonoBehaviour {
 	private Image Brendrr;
 	private Image Srendrr;
     //number of cards allowed in play, we can make public if things modify it.
-    private int fieldlimit = 6;
+    private int fieldlimit = 8;
 	public bool IsCursorInZone(Vector2 cursor, GameObject zone)
 	{
 		Vector2 localPos = zone.transform.InverseTransformPoint(cursor);

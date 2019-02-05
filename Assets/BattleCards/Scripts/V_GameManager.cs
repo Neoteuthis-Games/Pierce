@@ -192,11 +192,13 @@ public class V_GameManager : MonoBehaviour {
         //modify this to create the stages of a turn. this is the recharge step. players can draw up to 2 cards and their energy becomes 5. now its talking about the players turn. we will edit this first.
         
         if (type == playerTypes.AI) {
+
             cardgamestate = currentState.begin;
              allowIncreasingEnergy = true;
 			playerTurn = playerTypes.Player;
 			gm.endTurnBTN.SetActive (true);
 			gm.DrawBTN.SetActive (true);
+            //for pierce, we will need to unuse everything after a war. we can leave this here for now though.
 			GameObject[] obj = GameObject.FindGameObjectsWithTag ("PlayerOwned");
 			foreach (GameObject o in obj) {
 				o.GetComponent<V_CardActions> ().isUsed = false;
@@ -206,7 +208,7 @@ public class V_GameManager : MonoBehaviour {
             cardgamestate = currentState.recharge;
 
             if (allowIncreasingEnergy) {
-                V_PlayerHandler.energy = 5;
+                V_PlayerHandler.energy = refreshedEnergy;
                 //V_PlayerHandler.AddEnergy (iEnergy);
             }
 			if (handZone.transform.childCount > 7) {
@@ -331,8 +333,13 @@ public class V_GameManager : MonoBehaviour {
         if (V_GameManager.cardgamestate == V_GameManager.currentState.draw)// || initialsetup == true)
         {
             freedraws--;
-            if(freedraws>=0)
-            p.DrawOneCard();
+            if (freedraws >= 0)
+            {
+                p.DrawOneCard();
+            } else
+            {
+                V_GameManager.cardgamestate++;
+            }
         } else
         {
             p.DrawOneCard();
