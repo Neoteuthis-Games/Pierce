@@ -209,7 +209,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 
 	public void DoEffect(){
 		if (this.gameObject.tag == "PlayerOwned") {
-            //WHY ISN'T THIS A SWITCH CASE???
+            //WHY ISN'T THIS A SWITCH CASE??? ///we can do the thing. the thing with child classes.
 			if (extraEffect == cardEffect.AddEnergy) {
 				if (target == cardTarget.ToOpponent) {
 					V_GameManager.EffectAddEnergy (effectValue);
@@ -258,6 +258,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
             }
             if (extraEffect == cardEffect.LowerAllSpeed)
             {
+                //doesn't work :():(:(:(:)(: yet...
                 GameObject[] obj = GameObject.FindGameObjectsWithTag("AIOwned");
                 foreach (GameObject o in obj)
                 {
