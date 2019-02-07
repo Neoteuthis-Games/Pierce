@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
@@ -26,7 +25,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
     public enum cardDomain {None, Animal, Plant, Spirit, Elemental, Fungus, Machine, Nightmare, }; //domains for the cards, generally only creatures will have a domain.
     public enum cardSubDomain {None, Dust, Fire, Water, Lightning, Wind,}; //generally elementals will have subtypes, but others may too.
     public enum cardRank {Common, Uncommon, Rare, UltraRare, Event}; 
-	public enum cardEffect {None, DrawXCards, AddEnergy, AddHealth, DamagePlayer, DrawuptoXcards, }; //so many to add here. this will expand alot...
+	public enum cardEffect {None, DrawXCards, AddEnergy, AddHealth, DamagePlayer, DrawuptoXcards, LowerAllSpeed, }; //so many to add here. this will expand alot...
 	public enum cardTarget {None, ToPlayer, ToOpponent};
 	public enum usage {All, CardsOnly, BaseOnly, GeneratorsOnly, };
     public enum UniqueEffect {None, WebCrawler_OnAttack, }; //expand this list for unique effects. this will get big...
@@ -47,6 +46,11 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	public int health = 20;
     public int speed = 30;
 	public int energyCost = 1;
+    //[HideInInspector]
+    //public int baseattackDamage = 10;
+    //public int basehealth = 20;
+    //public int basespeed = 30;
+    //public int baseenergyCost = energyCost;
     [Space]
     [Header("            Special Attributes:")]
    // public bool UniqueEffect = false;
@@ -250,6 +254,25 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
                     V_PlayerHandler player = FindObjectOfType<V_PlayerHandler>();
                     //draw up to x cards
                     V_GameManager.effectdraw = effectValue;
+                }
+            }
+            if (extraEffect == cardEffect.LowerAllSpeed)
+            {
+                GameObject[] obj = GameObject.FindGameObjectsWithTag("AIOwned");
+                foreach (GameObject o in obj)
+                {
+                    if(type == cardType.Creature)
+                    {
+                        speed -= effectValue;
+                    }
+                }
+                GameObject[] objP = GameObject.FindGameObjectsWithTag("PlayerOwned");
+                foreach (GameObject o in objP)
+                {
+                    if (type == cardType.Creature)
+                    {
+                        speed -= effectValue;
+                    }
                 }
             }
         }

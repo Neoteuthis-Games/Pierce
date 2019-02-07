@@ -138,6 +138,7 @@ public class V_CardActions : MonoBehaviour {
 								transform.SetParent (V_GameManager.battleZone.transform);
 								curParent = V_GameManager.battleZone.transform;
 								gameObject.tag = "PlayerOwned";
+                                PlayEffect();
 							} else {
 								// Dispay error and revert move:
 								gm.DisplayError (gm.battleZoneIsFull);
@@ -172,8 +173,9 @@ public class V_CardActions : MonoBehaviour {
 							transform.SetParent (V_GameManager.battleZone.transform);
 							curParent = V_GameManager.battleZone.transform;
 							gameObject.tag = "PlayerOwned";
-							// Do the SPELL effect:
+							// Do the SPELL effects:
 							card.DoEffect ();
+                            PlayEffect();
 						} else {
 							GameObject error = Instantiate (gm.errorText, V_GameManager.gameArea.transform) as GameObject;
 							error.GetComponent<Text> ().text = gm.noEnergy;
@@ -367,6 +369,18 @@ public class V_CardActions : MonoBehaviour {
             else
             {
                 Destroy (gameObject, 1f);
+            }
+        }
+    }
+    //add all unique play effects here.
+    public void PlayEffect()
+    {
+        if (card.SpecialTiming == V_Card.UniqueEffectType.Play)
+        {
+            switch (card.SpecialEffect)
+            {
+
+                default: break;
             }
         }
     }

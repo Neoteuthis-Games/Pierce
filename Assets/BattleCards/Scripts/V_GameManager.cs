@@ -201,11 +201,8 @@ public class V_GameManager : MonoBehaviour {
 			playerTurn = playerTypes.Player;
 			gm.endTurnBTN.SetActive (true);
 			gm.DrawBTN.SetActive (true);
-            //for pierce, we will need to unuse everything after a war. we can leave this here for now though.
-			GameObject[] obj = GameObject.FindGameObjectsWithTag ("PlayerOwned");
-			foreach (GameObject o in obj) {
-				o.GetComponent<V_CardActions> ().isUsed = false;
-
+            RefreshField();
+			
 			//check for begin turn effects here
 
             cardgamestate = currentState.recharge;
@@ -219,7 +216,7 @@ public class V_GameManager : MonoBehaviour {
             }
             V_GameManager.cardgamestate = V_GameManager.currentState.draw;
             //////////////////////////////////////
-           }//now its talking about the AI turn. lets ignore this for now.
+           //now its talking about the AI turn. lets ignore this for now.
 		} else if (type == playerTypes.Player) {
             cardgamestate = currentState.begin;
             cardgamestate = currentState.recharge;
@@ -229,10 +226,11 @@ public class V_GameManager : MonoBehaviour {
 			allowIncreasingEnergy = true;
 			playerTurn = playerTypes.AI;
             V_GameManager.cardgamestate = V_GameManager.currentState.draw;
-            GameObject[] obj = GameObject.FindGameObjectsWithTag ("AIOwned");
-			foreach (GameObject o in obj) {
-				o.GetComponent<V_CardActions> ().isUsed = false;
-			}
+            RefreshField();
+   //         GameObject[] obj = GameObject.FindGameObjectsWithTag ("AIOwned");
+			//foreach (GameObject o in obj) {
+			//	o.GetComponent<V_CardActions> ().isUsed = false;
+			//}
             V_GameManager.cardgamestate = V_GameManager.currentState.action;
         }
 	}
@@ -389,8 +387,17 @@ public class V_GameManager : MonoBehaviour {
 		errorObj.GetComponent<Text> ().text = error;
 	}
 
-    public void ActivateEffect()
+    public void RefreshField()
     {
-      //  DoStuff
+        GameObject[] objP = GameObject.FindGameObjectsWithTag("PlayerOwned");
+        foreach (GameObject o in objP)
+        {
+            o.GetComponent<V_CardActions>().isUsed = false;
+        }
+        GameObject[] objA = GameObject.FindGameObjectsWithTag("AIOwned");
+        foreach (GameObject o in objA)
+        {
+            o.GetComponent<V_CardActions>().isUsed = false;
+        }
     }
 }
