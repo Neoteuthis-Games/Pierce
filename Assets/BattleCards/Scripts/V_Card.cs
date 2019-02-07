@@ -28,9 +28,10 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
     public enum cardRank {Common, Uncommon, Rare, UltraRare, Event}; 
 	public enum cardEffect {None, DrawXCards, AddEnergy, AddHealth, DamagePlayer, DrawuptoXcards, }; //so many to add here. this will expand alot...
 	public enum cardTarget {None, ToPlayer, ToOpponent};
-	public enum usage {All, CardsOnly, BaseOnly,};
-    public enum UniqueEffect {WebCrawler_OnAttack, }; //expand this list for unique effects. this will get big...
-	[Header("    Card Type:")]
+	public enum usage {All, CardsOnly, BaseOnly, GeneratorsOnly, };
+    public enum UniqueEffect {None, WebCrawler_OnAttack, }; //expand this list for unique effects. this will get big...
+    public enum UniqueEffectType { None, Constant, Activated, Death, Play, Attack, Convert, Discard, Toss, Purge, Draw, }; 
+    [Header("    Card Type:")]
 	public cardType type;
     [Header("    Card Domain:")]
     public cardDomain domain;
@@ -56,7 +57,9 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
     public bool clockwork = false; //use this if the card uses gear counters.
     public int PowerAttack = 0; //use this if the card gains power while attacking.
     public int Armor = 0; // use this to reduce damage taken by cards
+    public int recoil = 0; //you take damage while attacking with this card.
     public int regenerate = 0; //use this if the creature regains health when you recharge.
+    [Space]
     public int GearCounters = 0; //if clockwork, these will count down every end step.
     public int SwarmCounters = 0; //these count down to replace destroy effects.
     public int DeathCounters = 0; //add these for certain effects like boosting attacks etc
@@ -66,11 +69,18 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	public cardEffect extraEffect;
 	public cardTarget target;
 	public int effectValue = 1;
-	[HideInInspector]
+    [Space]
+    public cardEffect PlayEffect;
+    public cardEffect AttackEffect;
+    public cardEffect DeathEffect;
+    public cardEffect ActivatedEffect;
+    public UniqueEffect SpecialEffect;
+    public UniqueEffectType SpecialTiming;
+    [HideInInspector]
 	public bool autoUse = false;
 	[Space]
 	[Header("    Usage:")]
-	public usage canBeUsedTo;
+	public usage canBeUsedTo; //utilize this to determine when we are able to do the thing with the thing
 	[Space]
 	[Header("    Parts:")]
 	public Sprite graphicImage;
@@ -91,6 +101,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	public GameObject deathEffect;
 	[Space]
 	public bool placed = false;
+    public bool isAttacking = false;
 	public float delay = 1;
 	private float curDelay = 0;
 	[HideInInspector] public V_CardActions cActions;
@@ -283,4 +294,30 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 			gm.curSelected = null;
 		}
 	}
+
+    //public void UniqueEffectActivate()//we may not need this... we'll see...
+    //{
+    //    switch (SpecialEffect)
+    //    {
+    //        case UniqueEffect.None:
+    //            break;
+    //        case UniqueEffect.WebCrawler_OnAttack:
+    //           // WebCrawler();
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //}
+   public void WebCrawler(V_Card target)
+    {
+        if(target != null) { 
+             if(target.speed == 0)
+             {
+                this.PowerAttack = 50;
+             } else
+             {
+                this.PowerAttack = 0;
+             }
+        }
+    }
 }
