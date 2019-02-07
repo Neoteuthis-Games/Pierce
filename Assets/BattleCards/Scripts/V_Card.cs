@@ -29,6 +29,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	public enum cardEffect {None, DrawXCards, AddEnergy, AddHealth, DamagePlayer, DrawuptoXcards, }; //so many to add here. this will expand alot...
 	public enum cardTarget {None, ToPlayer, ToOpponent};
 	public enum usage {All, CardsOnly, BaseOnly,};
+    public enum UniqueEffect {WebCrawler_OnAttack, }; //expand this list for unique effects. this will get big...
 	[Header("    Card Type:")]
 	public cardType type;
     [Header("    Card Domain:")]
@@ -45,8 +46,23 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	public int health = 20;
     public int speed = 30;
 	public int energyCost = 1;
-	[Space]
-	[Header("                             -Extra Effects-")]
+    [Space]
+    [Header("            Special Attributes:")]
+   // public bool UniqueEffect = false;
+    public bool Relentless = false; // use this if the creature's speed cannot be reduced.
+    public bool klutz = false; //use this if the creature can't hold equipment.
+    public bool interceptor = false; //the creature can intercept an attack using its action.
+    public bool demolisher = false; // the creature can attack generators while guarded
+    public bool clockwork = false; //use this if the card uses gear counters.
+    public int PowerAttack = 0; //use this if the card gains power while attacking.
+    public int Armor = 0; // use this to reduce damage taken by cards
+    public int regenerate = 0; //use this if the creature regains health when you recharge.
+    public int GearCounters = 0; //if clockwork, these will count down every end step.
+    public int SwarmCounters = 0; //these count down to replace destroy effects.
+    public int DeathCounters = 0; //add these for certain effects like boosting attacks etc
+    public int LifeCounters = 0; //add these for damage prevention effects
+    [Space]
+    [Header("                             -Extra Effects-")]
 	public cardEffect extraEffect;
 	public cardTarget target;
 	public int effectValue = 1;
@@ -94,7 +110,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	// Update is called once per frame
 	void Update () {
 
-		// If our V_CardActions component found a game manager then it means we're in a game.
+		// If our V_CardActions component found a game manager then it means we're in a game.    -_- bad!
 		// And if it's true then behave like in game:
 		if (cActions.gm) {
 			if (health <= 0)
@@ -127,7 +143,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 				if (curDelay >= delay){
 					curDelay = 0;
 					placed = false;
-					DoEffect();
+					DoEffect();//KEEP THIS FOR ETB EFFECTS
 				}
 			}
 		}
@@ -178,6 +194,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 
 	public void DoEffect(){
 		if (this.gameObject.tag == "PlayerOwned") {
+            //WHY ISN'T THIS A SWITCH CASE???
 			if (extraEffect == cardEffect.AddEnergy) {
 				if (target == cardTarget.ToOpponent) {
 					V_GameManager.EffectAddEnergy (effectValue);

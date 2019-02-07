@@ -57,6 +57,7 @@ public class V_CardPresenter : MonoBehaviour {
 				toolTip.transform.GetChild (0).GetComponent<Text> ().text = V_CardCollections.cards [index].cardDescription;
 			}
 		} else {
+            if(toolTip!=null)
 			toolTip.SetActive (false);
 		}
 

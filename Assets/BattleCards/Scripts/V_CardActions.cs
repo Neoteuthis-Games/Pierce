@@ -229,10 +229,10 @@ public class V_CardActions : MonoBehaviour {
 		}
 
 	}*/
-
+    //USE THIS FOR ATTACKING/USING ACTIONS
 	public void Use(V_Card target){
 		V_Card thisCard = card;
-		Debug.Log ("AI attacked!");
+		Debug.Log ("Player attacked!");
 		if (target.gameObject.tag == "AIOwned" && this.tag == "PlayerOwned") {
 			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.cardgamestate == V_GameManager.currentState.war) {
 				// Enemy damaged effect:
@@ -241,12 +241,12 @@ public class V_CardActions : MonoBehaviour {
 				// We damaged effect:
 				Text us = Instantiate (V_GameManager.sdamageEffect, thisCard.transform) as Text;
 				us.text = "-" + target.attackDamage;
-				//
-				target.health -= thisCard.attackDamage;
-				thisCard.health -= target.attackDamage;
+                //
+                target.health -= thisCard.attackDamage + card.PowerAttack - target.Armor;
+				thisCard.health -= target.attackDamage - target.Armor;
                 target.cardHealthHandler.text = target.health.ToString();
                 thisCard.cardHealthHandler.text = thisCard.health.ToString();
-                thisCard.DoEffect ();
+                thisCard.DoEffect ();//AHA THERE IT IS. COMBAT EFFECTS
 				DestroyThisCard ();
 				target.cActions.DestroyThisCard ();
 				isUsed = true;
@@ -262,8 +262,8 @@ public class V_CardActions : MonoBehaviour {
 				Text us = Instantiate (V_GameManager.sdamageEffect, thisCard.transform) as Text;
 				us.text = "-" + target.attackDamage;
 				//
-				target.health -= thisCard.attackDamage;
-                thisCard.health -= target.attackDamage;
+				target.health -= thisCard.attackDamage + card.PowerAttack - target.Armor;
+                thisCard.health -= target.attackDamage - target.Armor;
                 target.cardHealthHandler.text = target.health.ToString();
                 thisCard.cardHealthHandler.text = thisCard.health.ToString();
 				thisCard.DoEffect ();

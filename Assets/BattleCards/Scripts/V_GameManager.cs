@@ -123,14 +123,16 @@ public class V_GameManager : MonoBehaviour {
 		avatarZone = avatarHandler;
 		sdamageEffect = damageEffect;
 		shealEffect = healEffect;
+        if(drawCostText != null)
 		drawCostText.text = drawCost.ToString ();
 
 		// Draw the first hand cards:
 		playerTurn = playerTypes.Player;
 		p.gm = this;
+        cardgamestate = currentState.draw;
         //this is what we need to use to set the health to the size of the deck. we can disable it for now.
        // V_PlayerHandler.health = p.myDeck.Length;
-		p.StartDraw ();
+		//p.StartDraw ();//we can disable this for now. if we have effects that only trigger in starting hand we can readd.
         for (int i = 0; i < startinghand; i++)
         {
             p.DrawOneCard();
@@ -222,7 +224,7 @@ public class V_GameManager : MonoBehaviour {
             cardgamestate = currentState.begin;
             cardgamestate = currentState.recharge;
             if (allowIncreasingEnergy) {
-				V_AI.EffectAddEnergy (iEnergy);
+                V_AI.energy = 5;//EffectAddEnergy (iEnergy);
 			}
 			allowIncreasingEnergy = true;
 			playerTurn = playerTypes.AI;
@@ -338,11 +340,12 @@ public class V_GameManager : MonoBehaviour {
         if (V_GameManager.cardgamestate == V_GameManager.currentState.draw)// || initialsetup == true)
         {
             freedraws--;
-            if (freedraws >= 0)
+            if (freedraws > 0)
             {
                 p.DrawOneCard();
             } else
             {
+                p.DrawOneCard();
                 V_GameManager.cardgamestate++;
             }
         } else if(effectdraw > 0)
@@ -385,4 +388,9 @@ public class V_GameManager : MonoBehaviour {
 		GameObject errorObj = Instantiate (errorText, gameArea.transform) as GameObject;
 		errorObj.GetComponent<Text> ().text = error;
 	}
+
+    public void ActivateEffect()
+    {
+      //  DoStuff
+    }
 }
