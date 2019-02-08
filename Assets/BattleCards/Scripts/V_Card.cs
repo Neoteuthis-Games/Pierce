@@ -38,19 +38,30 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
     [Header("    Card Rank:")]
 	public cardRank rank;
 	[Header("    Name & Description:")]
-	public string cardName = "Warrior";
-	public string cardDescription = "Active: Deal 1 damage to a card or to the opponent player.";
+	public string cardName = "Glitch";
+	public string cardDescription = "Duplicate the 8th item in your inventory 255 times.";
 
 	[Header("    Attributes:")]
-	public int attackDamage = 10;
-	public int health = 20;
-    public int speed = 30;
-	public int energyCost = 1;
-    //[HideInInspector]
-    //public int baseattackDamage = 10;
-    //public int basehealth = 20;
-    //public int basespeed = 30;
-    //public int baseenergyCost = energyCost;
+	public int attackDamage = 0;
+	public int health = 10;
+    public int speed = 0;
+	public int energyCost = 0;
+    [HideInInspector]
+    public int baseattackDamage = 10;
+    public int basehealth = 20;
+    public int basespeed = 30;
+    public int baseenergyCost = 1;
+    /// <summary>
+    /// USE THE mod ONES to add effects that last until the card dies, the TEMP ones will be wiped at the end of each turn.
+    /// </summary>
+    public int MODattackDamage = +0;
+    public int MODhealth = +0;
+    public int MODspeed = +0;
+    public int MODenergyCost = +0;
+    public int TEMPattackDamage = +0;
+    public int TEMPhealth = +0;
+    public int TEMPspeed = -0;
+    public int TEMPenergyCost = -0;
     [Space]
     [Header("            Special Attributes:")]
    // public bool UniqueEffect = false;
@@ -120,6 +131,10 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	void Start(){
 		// Remove this if you also want the card animations to play in main menu:
 		GetComponentInChildren<Animator> ().enabled = UnityEngine.SceneManagement.SceneManager.GetActiveScene ().name != "MainMenu"; //gamestate update
+        baseattackDamage = attackDamage;
+        baseenergyCost = energyCost;
+        basehealth = health;
+        basespeed = speed;
 	}
 
 	// Update is called once per frame
@@ -264,7 +279,8 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
                 {
                     if(type == cardType.Creature)
                     {
-                        speed -= effectValue;
+                        o.GetComponent<V_Card>().speed -= effectValue;
+                        o.GetComponent<V_Card>().cardSpeedHandler.text = o.GetComponent<V_Card>().speed.ToString();
                     }
                 }
                 GameObject[] objP = GameObject.FindGameObjectsWithTag("PlayerOwned");
@@ -272,7 +288,8 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
                 {
                     if (type == cardType.Creature)
                     {
-                        speed -= effectValue;
+                        o.GetComponent<V_Card>().speed -= effectValue;
+                        o.GetComponent<V_Card>().cardSpeedHandler.text = o.GetComponent<V_Card>().speed.ToString();
                     }
                 }
             }
