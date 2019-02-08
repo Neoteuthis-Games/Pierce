@@ -52,7 +52,8 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
     public int basespeed = 30;
     public int baseenergyCost = 1;
     /// <summary>
-    /// USE THE mod ONES to add effects that last until the card dies, the TEMP ones will be wiped at the end of each turn.
+    /// USE THE mod ONES to add effects that last until the card dies,
+    /// the TEMP ones will be wiped at the end of each turn.
     /// </summary>
     public int MODattackDamage = +0;
     public int MODhealth = +0;
