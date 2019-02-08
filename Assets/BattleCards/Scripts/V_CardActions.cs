@@ -71,16 +71,25 @@ public class V_CardActions : MonoBehaviour {
 			}
 		}
 
-		// For AI:
-		if (gameObject.tag == "AIOwned") {
-			if (gm.aiCurSelected == card) {
-				card.selectedEffect.SetActive (true);
-				isSelected = true;
-			} else {
-				card.selectedEffect.SetActive (false);
-				isSelected = false;
-			}
-		}
+        // For AI:
+        if (gameObject.tag == "AIOwned")
+        {
+            if (gm.aiCurSelected == card)
+            {
+                card.selectedEffect.SetActive(true);
+                isSelected = true;
+            }
+            else
+            {
+                card.selectedEffect.SetActive(false);
+                isSelected = false;
+            }
+        }
+        /////warloop{
+        //while(V_GameManager.cardgamestate == V_GameManager.currentState.war)
+        //{
+
+        //}
 	}
 	
 	public void OnDrag(){

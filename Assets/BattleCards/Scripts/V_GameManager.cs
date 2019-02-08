@@ -189,52 +189,124 @@ public class V_GameManager : MonoBehaviour {
 
 		opponentsTurnText.gameObject.SetActive (playerTurn == playerTypes.AI && !isGameOver);
 		playersTurnText.gameObject.SetActive (playerTurn == playerTypes.Player && !isGameOver);
-	}
-	// This is called when a player hits the "End Turn" button:
-	public void ChangeTurn(playerTypes type){
+
+        //    //warloop
+        /// DANGER INFINITE LOOP. DO NOT ACTIVATE UNTIL FIXED. ///
+        //    int activespeed = 0;
+        //    int prevspeed = 0;
+        //    while (cardgamestate == currentState.war)
+        //    {
+        //        int usagecheck = 0;
+        //        GameObject[] objP = GameObject.FindGameObjectsWithTag("PlayerOwned");
+        //        GameObject[] objA = GameObject.FindGameObjectsWithTag("AIOwned");
+        //        //GameObject[] objT = objA + objP; // I wish it was this easy....
+        //        foreach (GameObject o in objP)
+        //        {
+        //            if (!o.GetComponent<V_CardActions>().isUsed)
+        //            {
+        //                usagecheck++;
+        //            }
+        //        }
+        //        foreach (GameObject o in objA)
+        //        {
+        //            if (!o.GetComponent<V_CardActions>().isUsed)
+        //            {
+        //                usagecheck++;
+        //            }
+        //        }
+        //        if(usagecheck > 0)
+        //        {
+        //            //round active
+
+        //            foreach (GameObject o in objP)
+        //            {
+        //                if (o.GetComponent<V_Card>().speed > activespeed && o.GetComponent<V_Card>().speed < prevspeed)
+        //                {
+        //                    activespeed = o.GetComponent<V_Card>().speed;
+        //                }
+        //            }
+        //            foreach (GameObject o in objA)
+        //            {
+        //                if (o.GetComponent<V_Card>().speed > activespeed && o.GetComponent<V_Card>().speed < prevspeed)
+        //                {
+        //                    activespeed = o.GetComponent<V_Card>().speed;
+        //                }
+        //            }
+        //            prevspeed = activespeed;
+
+        //            foreach (GameObject o in objP)
+        //            {
+        //                if (o.GetComponent<V_Card>().speed == activespeed)
+        //                {
+        //if(o.GetComponent<V_Card>().actions > 0)
+        //                    o.GetComponent<V_CardActions>().isUsed = false;
+        //                }
+        //            }
+        //            foreach (GameObject o in objA)
+        //            {
+        //                if (o.GetComponent<V_Card>().speed == activespeed)
+        //                {
+        //if(o.GetComponent<V_Card>().actions > 0)
+        //                    o.GetComponent<V_CardActions>().isUsed = false;
+        //                }
+        //            }
+        //        } else
+        //        {
+        //            cardgamestate = currentState.end;
+        //        }
+        //    }
+    }
+    // This is called when a player hits the "End Turn" button:
+    public void ChangeTurn(playerTypes type)
+    {
         //modify this to create the stages of a turn. this is the recharge step. players can draw up to 2 cards and their energy becomes 5. now its talking about the players turn. we will edit this first.
-        
-        if (type == playerTypes.AI) {
+
+        if (type == playerTypes.AI)
+        {
 
             cardgamestate = currentState.begin;
-             allowIncreasingEnergy = true;
-			playerTurn = playerTypes.Player;
-			gm.endTurnBTN.SetActive (true);
-			gm.DrawBTN.SetActive (true);
+            allowIncreasingEnergy = true;
+            playerTurn = playerTypes.Player;
+            gm.endTurnBTN.SetActive(true);
+            gm.DrawBTN.SetActive(true);
             RefreshField();
-			
-			//check for begin turn effects here
+
+            //check for begin turn effects here
 
             cardgamestate = currentState.recharge;
 
-            if (allowIncreasingEnergy) {
+            if (allowIncreasingEnergy)
+            {
                 V_PlayerHandler.energy = refreshedEnergy;
                 //V_PlayerHandler.AddEnergy (iEnergy);
             }
-			if (handZone.transform.childCount > 7) {
-               //make players discard down to 7 cards.
+            if (handZone.transform.childCount > 7)
+            {
+                //make players discard down to 7 cards.
             }
             V_GameManager.cardgamestate = V_GameManager.currentState.draw;
             //////////////////////////////////////
-           //now its talking about the AI turn. lets ignore this for now.
-		} else if (type == playerTypes.Player) {
+            //now its talking about the AI turn. lets ignore this for now.
+        }
+        else if (type == playerTypes.Player)
+        {
             cardgamestate = currentState.begin;
             cardgamestate = currentState.recharge;
-            if (allowIncreasingEnergy) {
+            if (allowIncreasingEnergy)
+            {
                 V_AI.energy = 5;//EffectAddEnergy (iEnergy);
-			}
-			allowIncreasingEnergy = true;
-			playerTurn = playerTypes.AI;
+            }
+            allowIncreasingEnergy = true;
+            playerTurn = playerTypes.AI;
             V_GameManager.cardgamestate = V_GameManager.currentState.draw;
             RefreshField();
-   //         GameObject[] obj = GameObject.FindGameObjectsWithTag ("AIOwned");
-			//foreach (GameObject o in obj) {
-			//	o.GetComponent<V_CardActions> ().isUsed = false;
-			//}
+            //         GameObject[] obj = GameObject.FindGameObjectsWithTag ("AIOwned");
+            //foreach (GameObject o in obj) {
+            //	o.GetComponent<V_CardActions> ().isUsed = false;
+            //}
             V_GameManager.cardgamestate = V_GameManager.currentState.action;
         }
-	}
-
+    }
 	/// <summary>
 	/// Send damage to the AI!
 	/// </summary>

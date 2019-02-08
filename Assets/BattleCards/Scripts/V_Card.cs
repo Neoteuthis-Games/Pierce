@@ -62,6 +62,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
     public int TEMPhealth = +0;
     public int TEMPspeed = -0;
     public int TEMPenergyCost = -0;
+    public int actions = 1;
     [Space]
     [Header("            Special Attributes:")]
    // public bool UniqueEffect = false;
@@ -273,22 +274,26 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
             }
             if (extraEffect == cardEffect.LowerAllSpeed)
             {
-                //doesn't work :():(:(:(:)(: yet...
+                //doesn't work :():(:(:(:)(: yet... BUT WHY NOT?????
                 GameObject[] obj = GameObject.FindGameObjectsWithTag("AIOwned");
                 foreach (GameObject o in obj)
                 {
-                    if(type == cardType.Creature)
+                    if(o.GetComponent<V_Card>().type == cardType.Creature && o.GetComponent<V_Card>().Relentless == false)
                     {
                         o.GetComponent<V_Card>().speed -= effectValue;
+                        if (o.GetComponent<V_Card>().speed < 0)
+                            o.GetComponent<V_Card>().speed = 0;
                         o.GetComponent<V_Card>().cardSpeedHandler.text = o.GetComponent<V_Card>().speed.ToString();
                     }
                 }
                 GameObject[] objP = GameObject.FindGameObjectsWithTag("PlayerOwned");
                 foreach (GameObject o in objP)
                 {
-                    if (type == cardType.Creature)
+                    if (o.GetComponent<V_Card>().type == cardType.Creature && o.GetComponent<V_Card>().Relentless == false)
                     {
                         o.GetComponent<V_Card>().speed -= effectValue;
+                        if (o.GetComponent<V_Card>().speed < 0)
+                            o.GetComponent<V_Card>().speed = 0;
                         o.GetComponent<V_Card>().cardSpeedHandler.text = o.GetComponent<V_Card>().speed.ToString();
                     }
                 }
