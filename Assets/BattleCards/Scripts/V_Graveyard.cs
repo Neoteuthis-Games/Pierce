@@ -3,36 +3,58 @@
  * 
  * Revision
  *      Mathew Kelly 02/08/2019 dd/mm/yyyy
- * 
+ *      Geordon Martin 02/09/2019 dd/mm/yyyy
  */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class V_Graveyard : MonoBehaviour
 {
-    private List<V_Card> graveyardList = new List<V_Card>();
+    private List<GameObject> graveyardList = new List<GameObject>();
     // This will give you the list of cards in the graveyard if we need it
     // elsewhere but any changes on it must be done through add and remove
+    private bool InfiniteLoop = true;
 
-    public List<V_Card> GraveyardList
+    public List<GameObject> GraveyardList
     {
         get { return graveyardList; }
     }
 
-    void AddToGraveyard(V_Card cardAdded)
+    public void AddToGraveyard(GameObject cardAdded)
     {
         graveyardList.Add(cardAdded);
+        if(InfiniteLoop == true)
+        Cleanup();
     }
 
-    void RemoveFromGraveYard(V_Card cardToBeRemoved)
+    public void RemoveFromGraveYard(GameObject cardToBeRemoved)
     {
         graveyardList.Remove(cardToBeRemoved);
+        Cleanup();
     }
 
-    void MoveCard()
+   public void MoveCard()
     {
-        
+        Cleanup();  
+    }
+
+    void Cleanup()
+    {
+        GameObject[] obj = GameObject.FindGameObjectsWithTag("InGrave");
+        foreach (GameObject o in obj)
+        {
+            InfiniteLoop = false;
+           // AddToGraveyard(o);
+            o.SetActive(false);
+            Debug.Log(o.GetComponent<V_Card>().cardName);
+        }
+        InfiniteLoop = true;
+      Array boople = graveyardList.ToArray();
+        int gravelength = boople.Length;
+        Debug.Log(gravelength);
+        graveyardList[gravelength-1].SetActive(true);
     }
 }

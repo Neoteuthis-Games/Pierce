@@ -93,7 +93,7 @@ public class V_CardActions : MonoBehaviour {
 	}
 	
 	public void OnDrag(){
-		if (isInGame && V_GameManager.playerTurn == V_GameManager.playerTypes.Player && gameObject.tag != "PlayerOwned") {
+		if (isInGame && V_GameManager.playerTurn == V_GameManager.playerTypes.Player && gameObject.tag == "InHand") { //aha!
 			//Debug.Log ("Dragging Card...");
 			transform.position = Input.mousePosition;
 			transform.SetParent (V_GameManager.gameArea.transform);
@@ -133,7 +133,7 @@ public class V_CardActions : MonoBehaviour {
 		Srendrr.color = Color.white;
 
 		//Conditions for card depoyment:
-		if (isInGame && V_GameManager.playerTurn == V_GameManager.playerTypes.Player && gameObject.tag != "PlayerOwned"){// && V_GameManager.cardgamestate == V_GameManager.currentState.action) {
+		if (isInGame && V_GameManager.playerTurn == V_GameManager.playerTypes.Player && gameObject.tag == "InHand"){// && V_GameManager.cardgamestate == V_GameManager.currentState.action) {
             //WE NEED TO MODIFY THIS FOR CARDS THAT CAN BE PLAYED OUTSIDE THE ACTION PHASE.
 			// If this card is a CREATURE card, then do:
             //ok this area we will need to modify ALOT.
@@ -366,12 +366,13 @@ public class V_CardActions : MonoBehaviour {
 	public void DestroyThisCard(){
         //send to graveyard instead
 		V_Card thisCard = card;
-		if (thisCard.health <= 0) {
+        if (thisCard.health <= 0 || card.isDestroyed) {
 			Instantiate (thisCard.deathEffect, thisCard.transform);
             if (gameObject.tag == "PlayerOwned")
              {
                  gameObject.tag = "InGrave";
                 transform.SetParent(V_GameManager.graveZone.transform);
+                V_GameManager.graveZone.GetComponent<V_Graveyard>().AddToGraveyard(gameObject);
                  curParent = V_GameManager.graveZone.transform;
                 
             }
