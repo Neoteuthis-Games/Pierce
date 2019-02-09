@@ -65,6 +65,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
     public int TEMPenergyCost = -0;
     public int actions = 1;
     public bool isDestroyed = false; //flip this to true to use any destroy effects, then call destroythiscard in actions.
+    public bool isConverted = false; //this will be used to identify if a card is being destroyed from conversion.
     [Space]
     [Header("            Special Attributes:")]
    // public bool UniqueEffect = false;

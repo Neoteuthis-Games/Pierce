@@ -448,6 +448,7 @@ public class V_GameManager : MonoBehaviour {
         {
             V_PlayerHandler.energy += curSelected.energyCost;
             curSelected.isDestroyed = true;
+            curSelected.isConverted = true;
             curSelected.GetComponent<V_CardActions>().DestroyThisCard();
         }
     }
