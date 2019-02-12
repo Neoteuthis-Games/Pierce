@@ -107,8 +107,14 @@ public class V_PlayerHandler : MonoBehaviour {
 		gm.DrawACard (picks);
 	}
 
-	// RECEIVE EFFECTS (called by other scripts):
-	public static void AddEnergy(int value){
+    public void TakeDamage()
+    {
+        V_Card[] picks = new V_Card[] { myDeck[Random.Range(0, myDeck.Length)] };
+        gm.LoseACard(picks);
+    }
+
+    // RECEIVE EFFECTS (called by other scripts):
+    public static void AddEnergy(int value){
 		energy += value;
 	}
 	public static void EffectDamage (int value, GameObject effect, Transform parentZone){

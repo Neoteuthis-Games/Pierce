@@ -331,7 +331,7 @@ public class V_CardActions : MonoBehaviour {
     //    }
     //}
 
-    public void UseToPlayer(GameObject target){
+    public void UseToPlayer(GameObject target){ //for attacking players.
 		V_Card thisCard = card;
         thisCard.isAttacking = true;
 		Debug.Log ("AI attacked!");
@@ -343,7 +343,12 @@ public class V_CardActions : MonoBehaviour {
 				Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
 				enemy.text = "-" + thisCard.energyCost;
                 //
-                V_PlayerHandler.health -= thisCard.energyCost;
+                V_PlayerHandler.health -= thisCard.energyCost; //this can be changed to make people discard from the deck instead.
+                for (int i = thisCard.energyCost; i > 0; i--)
+                {
+                  target.GetComponent<V_PlayerHandler>().TakeDamage();//null???
+                }
+
                 thisCard.DoEffect();
                 isUsed = true;
 			}
@@ -355,7 +360,7 @@ public class V_CardActions : MonoBehaviour {
                 Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
 				enemy.text = "-" + thisCard.energyCost;
 				//
-				V_AI.health -= thisCard.energyCost;
+				V_AI.health -= thisCard.energyCost; //same here
                 thisCard.DoEffect();
                 isUsed = true;
 			}

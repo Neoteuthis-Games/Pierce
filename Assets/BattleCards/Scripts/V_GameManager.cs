@@ -353,7 +353,17 @@ public class V_GameManager : MonoBehaviour {
 		}
 	}
 
-	public void AttackPlayer(V_Card card, playerTypes who){
+    public void LoseACard(V_Card[] cards)
+    {
+
+        foreach (V_Card card in cards)
+        {
+            V_Card curCard = Instantiate(card, graveZone.transform);
+            curCard.cActions.isInGame = true;
+        }
+    }
+
+    public void AttackPlayer(V_Card card, playerTypes who){
 		if (who == playerTypes.Player) {
 			GameObject targetPlayer = GameObject.FindGameObjectWithTag ("Player");
 			card.cActions.UseToPlayer (targetPlayer);
@@ -425,6 +435,7 @@ public class V_GameManager : MonoBehaviour {
         }
 		//p.ReDraw ();
 	}
+
 	public void PlayerEndturn(){
         cardgamestate = 0;
         freedraws = freedrawnum;
@@ -452,9 +463,11 @@ public class V_GameManager : MonoBehaviour {
             curSelected.GetComponent<V_CardActions>().DestroyThisCard();
         }
     }
+
 	public void BackToScene(string sceneName){
 		SceneManager.LoadScene (sceneName);
 	}
+
 	public void DisplayError (string error){
 		// Display error if the selected card is not usable to a player base:
 		GameObject errorObj = Instantiate (errorText, gameArea.transform) as GameObject;
