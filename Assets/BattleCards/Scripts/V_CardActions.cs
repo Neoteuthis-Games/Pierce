@@ -19,8 +19,9 @@ using UnityEngine.UI;
 public class V_CardActions : MonoBehaviour {
 
 	[Header("    Card State:")]
-	public bool isSelected = false;
-	public bool isUsed = false;
+	public bool isSelected = false; //card is currently selected.
+	public bool isUsed = false; //card has expended uses per turn.
+    public bool isActive = false; //card has actions but out of its turn in war.
 
 	[Header("    Misc:")]
 	public Transform curParent;
@@ -59,9 +60,16 @@ public class V_CardActions : MonoBehaviour {
 		} else {
 			card.disabledEffect.SetActive (false);
 		}
-
-		// For Player:
-		if (gameObject.tag == "PlayerOwned" || gameObject.tag == "InHand") {
+        if(V_GameManager.cardgamestate == V_GameManager.currentState.war && card.actions <= 0)
+        {
+            card.inactiveEffect.SetActive(true);
+        }
+        else
+        {
+            card.inactiveEffect.SetActive(false);
+        }
+        // For Player:
+        if (gameObject.tag == "PlayerOwned" || gameObject.tag == "InHand") {
 			if (gm.curSelected == card) {
 				card.selectedEffect.SetActive (true);
 				isSelected = true;

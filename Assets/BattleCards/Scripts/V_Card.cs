@@ -117,6 +117,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 	[Header("    Miscs:")]
 	public GameObject selectedEffect;
 	public GameObject disabledEffect;
+    public GameObject inactiveEffect;
 	public GameObject deathEffect;
 	[Space]
 	public bool placed = false;
