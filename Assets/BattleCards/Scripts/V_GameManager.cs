@@ -282,10 +282,10 @@ public class V_GameManager : MonoBehaviour {
                 ActiveCards.Add(objP[i]);
             }
             ActiveCards.Clear();
-            if (playerTurn == playerTypes.AI)
-            {
-                ChangeTurn(playerTypes.AI);
-            }
+            //if (playerTurn == playerTypes.AI)
+            //{
+            //    ChangeTurn(playerTypes.AI);
+            //}
             if (playerTurn == playerTypes.Player)
             {
                 ChangeTurn(playerTypes.Player);
