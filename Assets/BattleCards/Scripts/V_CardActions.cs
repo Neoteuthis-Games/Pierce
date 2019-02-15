@@ -226,13 +226,32 @@ public class V_CardActions : MonoBehaviour {
 	// Player card selecting actions:
 	public void Select(){
 		if (!isUsed && gameObject.tag == "PlayerOwned" && V_GameManager.playerTurn == V_GameManager.playerTypes.Player) {
-			if (isSelected) {
-				gm.curSelected = null;
-				isSelected = false;
-			} else {
-				isSelected = true;
-				gm.curSelected = card;
-			}
+            if (V_GameManager.cardgamestate == V_GameManager.currentState.war)
+            {
+                if (isSelected || isActive == false)
+                {
+                    gm.curSelected = null;
+                    isSelected = false;
+                }
+                else
+                {
+                    isSelected = true;
+                    gm.curSelected = card;
+                }
+            }
+            else
+            {
+                if (isSelected)
+                {
+                    gm.curSelected = null;
+                    isSelected = false;
+                }
+                else
+                {
+                    isSelected = true;
+                    gm.curSelected = card;
+                }
+            }
 		}
 
 		if (gameObject.tag == "AIOwned" && gm.curSelected != null) {
