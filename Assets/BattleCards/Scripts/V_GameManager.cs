@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
 /// <summary>
 ///      GameManager script for "BattleCards: CCG Adventure Template"
 /// 
@@ -101,8 +100,12 @@ public class V_GameManager : MonoBehaviour {
 	public static GameObject aiAvatarZone;
     public static GameObject aigraveZone;
     public static bool allowIncreasingEnergy = false;
-
-	[HideInInspector] public bool isGameOver = false;
+    [Header("    War Stats:")]
+    public int activespeed = 0;
+    public bool warentered = false;
+    public int prevspeed = 1000;
+    public System.Collections.Generic.List<GameObject> ActiveCards = new System.Collections.Generic.List<GameObject>(); 
+    [HideInInspector] public bool isGameOver = false;
 
 	// Internal:
 	V_PlayerHandler p;	// For accessing non-static variables in player
@@ -159,108 +162,132 @@ public class V_GameManager : MonoBehaviour {
 		iEnergy = increasingEnergy;
       
     }
-	
-	// Update is called once per frame
-	void Update () {
-		curEnergy = V_PlayerHandler.energy;
-		curHealth = V_PlayerHandler.health;
 
-		energyText.text = curEnergy.ToString ();
-		aiHpText.text = V_AI.health.ToString () + "/" + maxHealth;
-		hpText.text = curHealth.ToString () + "/" + maxHealth;
+    // Update is called once per frame
+    void Update()
+    {
+        curEnergy = V_PlayerHandler.energy;
+        curHealth = V_PlayerHandler.health;
 
-		// Check if all players still have sufficient health, but
-		// if one doesn't then call the CallGameResult function:
-		if (!isGameOver) {
-			// if the player's base died:
-			if (V_PlayerHandler.health == 0) {
-				isGameOver = true;
-				// then AI is the winner:
-				CallGameResult (false);
-				return;
-			}
-			// if the AI's base died:
-			if (V_AI.health == 0) {
-				isGameOver = true;
-				// then player is the winner:
-				CallGameResult (true);
-			}
-		}
+        energyText.text = curEnergy.ToString();
+        aiHpText.text = V_AI.health.ToString() + "/" + maxHealth;
+        hpText.text = curHealth.ToString() + "/" + maxHealth;
 
-		opponentsTurnText.gameObject.SetActive (playerTurn == playerTypes.AI && !isGameOver);
-		playersTurnText.gameObject.SetActive (playerTurn == playerTypes.Player && !isGameOver);
+        // Check if all players still have sufficient health, but
+        // if one doesn't then call the CallGameResult function:
+        if (!isGameOver)
+        {
+            // if the player's base died:
+            if (V_PlayerHandler.health == 0)
+            {
+                isGameOver = true;
+                // then AI is the winner:
+                CallGameResult(false);
+                return;
+            }
+            // if the AI's base died:
+            if (V_AI.health == 0)
+            {
+                isGameOver = true;
+                // then player is the winner:
+                CallGameResult(true);
+            }
+        }
 
-        //    //warloop
-        /// DANGER INFINITE LOOP. DO NOT ACTIVATE UNTIL FIXED. ///
-        //    int activespeed = 0;
-        //    int prevspeed = 0;
-        //    while (cardgamestate == currentState.war)
-        //    {
-        //        int usagecheck = 0;
-        //        GameObject[] objP = GameObject.FindGameObjectsWithTag("PlayerOwned");
-        //        GameObject[] objA = GameObject.FindGameObjectsWithTag("AIOwned");
-        //        //GameObject[] objT = objA + objP; // I wish it was this easy....
-        //        foreach (GameObject o in objP)
-        //        {
-        //            if (!o.GetComponent<V_CardActions>().isUsed)
-        //            {
-        //                usagecheck++;
-        //            }
-        //        }
-        //        foreach (GameObject o in objA)
-        //        {
-        //            if (!o.GetComponent<V_CardActions>().isUsed)
-        //            {
-        //                usagecheck++;
-        //            }
-        //        }
-        //        if(usagecheck > 0)
-        //        {
-        //            //round active
+        opponentsTurnText.gameObject.SetActive(playerTurn == playerTypes.AI && !isGameOver);
+        playersTurnText.gameObject.SetActive(playerTurn == playerTypes.Player && !isGameOver);
 
-        //            foreach (GameObject o in objP)
-        //            {
-        //                if (o.GetComponent<V_Card>().speed > activespeed && o.GetComponent<V_Card>().speed < prevspeed)
-        //                {
-        //                    activespeed = o.GetComponent<V_Card>().speed;
-        //                }
-        //            }
-        //            foreach (GameObject o in objA)
-        //            {
-        //                if (o.GetComponent<V_Card>().speed > activespeed && o.GetComponent<V_Card>().speed < prevspeed)
-        //                {
-        //                    activespeed = o.GetComponent<V_Card>().speed;
-        //                }
-        //            }
-        //            prevspeed = activespeed;
+        //warloop, can become a switch case to manage all turns parts.
+        if (cardgamestate == currentState.war)
+        {
+            int usagecheck = 0;
+            if (warentered == false) //war setup
+            {
+                GameObject[] objP = GameObject.FindGameObjectsWithTag("PlayerOwned");
+                GameObject[] objA = GameObject.FindGameObjectsWithTag("AIOwned");
+                //create a list of active cards
+                for (int i = 0; i < objA.Length; i++)
+                {
+                    ActiveCards.Add(objA[i]);
+                    if (playerTurn == playerTypes.AI)
+                    {
+                        objA[i].GetComponent<V_Card>().TEMPspeed += 5;
+                    }
+                }
+                for (int i = 0; i < objP.Length; i++)
+                {
+                    ActiveCards.Add(objP[i]);
+                    if (playerTurn == playerTypes.Player)
+                    {
+                        objP[i].GetComponent<V_Card>().TEMPspeed += 5;
+                    }
+                }
+                warentered = true;
+                //find the first creatures to act...
+                foreach (GameObject o in ActiveCards)
+                {
+                    if (o.GetComponent<V_Card>().speed > activespeed && o.GetComponent<V_Card>().speed < prevspeed)
+                    {
+                        activespeed = o.GetComponent<V_Card>().speed;
+                    }
 
-        //            foreach (GameObject o in objP)
-        //            {
-        //                if (o.GetComponent<V_Card>().speed == activespeed)
-        //                {
-        //if(o.GetComponent<V_Card>().actions > 0)
-        //                    o.GetComponent<V_CardActions>().isUsed = false;
-        //                }
-        //            }
-        //            foreach (GameObject o in objA)
-        //            {
-        //                if (o.GetComponent<V_Card>().speed == activespeed)
-        //                {
-        //if(o.GetComponent<V_Card>().actions > 0)
-        //                    o.GetComponent<V_CardActions>().isUsed = false;
-        //                }
-        //            }
-        //        } else
-        //        {
-        //            cardgamestate = currentState.end;
-        //        }
-        //    }
+                    if (o.GetComponent<V_Card>().speed == activespeed && o.GetComponent<V_Card>().actions > 0)
+                    {
+                        o.GetComponent<V_CardActions>().isActive = true;
+                        usagecheck++;
+
+                    }
+                    else
+                    {
+                        o.GetComponent<V_CardActions>().isActive = false;
+                    }
+                }
+                prevspeed = activespeed;
+            }
+            //now to flow through each round;
+            usagecheck = 0;
+            foreach (GameObject o in ActiveCards)
+            {
+                if (o.GetComponent<V_Card>().speed == activespeed && o.GetComponent<V_Card>().actions > 0)
+                {
+                    o.GetComponent<V_CardActions>().isActive = true;
+                    usagecheck++;
+                }
+                else
+                {
+                    o.GetComponent<V_CardActions>().isActive = false;
+                }
+            }
+            if (usagecheck <= 0)
+            {
+                activespeed -= 5;
+            }
+            if (activespeed <= 0)
+            {
+                prevspeed = 1000;
+                ActiveCards.Clear();
+                cardgamestate = currentState.end;
+            }
+        }
+        if (cardgamestate == currentState.end)
+        {
+            GameObject[] objP = GameObject.FindGameObjectsWithTag("PlayerOwned");
+            GameObject[] objA = GameObject.FindGameObjectsWithTag("AIOwned");
+            for (int i = 0; i < objA.Length; i++)
+            {
+                ActiveCards.Add(objA[i]);
+            }
+            for (int i = 0; i < objP.Length; i++)
+            {
+                ActiveCards.Add(objP[i]);
+            }
+        }
     }
     // This is called when a player hits the "End Turn" button:
     public void ChangeTurn(playerTypes type)
     {
         //modify this to create the stages of a turn. this is the recharge step. players can draw up to 2 cards and their energy becomes 5. now its talking about the players turn. we will edit this first.
-
+        warentered = false;
         if (type == playerTypes.AI)
         {
 

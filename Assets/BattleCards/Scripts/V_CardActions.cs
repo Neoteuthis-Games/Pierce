@@ -22,7 +22,7 @@ public class V_CardActions : MonoBehaviour {
 	public bool isSelected = false; //card is currently selected.
 	public bool isUsed = false; //card has expended uses per turn.
     public bool isActive = false; //card has actions but out of its turn in war.
-
+    public bool isDelayed = false; //card is delaying its action til the end of war.
 	[Header("    Misc:")]
 	public Transform curParent;
 	public bool isInGame = false;
@@ -60,7 +60,15 @@ public class V_CardActions : MonoBehaviour {
 		} else {
 			card.disabledEffect.SetActive (false);
 		}
-        if(V_GameManager.cardgamestate == V_GameManager.currentState.war && card.actions <= 0)
+        if (isActive)
+        {
+            card.inactiveEffect.SetActive(true);
+        }
+        else
+        {
+            card.inactiveEffect.SetActive(false);
+        }
+        if (V_GameManager.cardgamestate == V_GameManager.currentState.war && card.actions <= 0)
         {
             card.inactiveEffect.SetActive(true);
         }
@@ -251,7 +259,8 @@ public class V_CardActions : MonoBehaviour {
     //USE THIS FOR ATTACKING/USING ACTIONS
 	public void Use(V_Card target){
 		V_Card thisCard = card;
-		Debug.Log ("Player attacked!");
+        thisCard.isAttacking = true;
+        Debug.Log ("Player attacked!");
 
 		if (target.gameObject.tag == "AIOwned" && this.tag == "PlayerOwned") {
 			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.cardgamestate == V_GameManager.currentState.war) {
@@ -268,6 +277,8 @@ public class V_CardActions : MonoBehaviour {
                 target.cardHealthHandler.text = target.health.ToString();
                 thisCard.cardHealthHandler.text = thisCard.health.ToString();
                 thisCard.DoEffect ();//AHA THERE IT IS. COMBAT EFFECTS
+                thisCard.actions--;
+                target.actions--;
 				DestroyThisCard ();
 				target.cActions.DestroyThisCard ();
 				isUsed = true;
@@ -289,12 +300,15 @@ public class V_CardActions : MonoBehaviour {
                 target.cardHealthHandler.text = target.health.ToString();
                 thisCard.cardHealthHandler.text = thisCard.health.ToString();
 				thisCard.DoEffect ();//here
-				DestroyThisCard ();
+                thisCard.actions--;
+                target.actions--;
+                DestroyThisCard ();
 				target.cActions.DestroyThisCard ();
 				isUsed = true;
 			}
 		}
-	}
+        thisCard.isAttacking = false;
+    }
     ///This will be for once we add gewnerators to the game.
     //public void UsetoGenerator(V_Card target)
     //{
@@ -358,6 +372,7 @@ public class V_CardActions : MonoBehaviour {
                 }
 
                 thisCard.DoEffect();
+                thisCard.actions--;
                 isUsed = true;
 			}
 		}
@@ -370,6 +385,7 @@ public class V_CardActions : MonoBehaviour {
 				//
 				V_AI.health -= thisCard.energyCost; //same here
                 thisCard.DoEffect();
+                thisCard.actions--;
                 isUsed = true;
 			}
 		}
