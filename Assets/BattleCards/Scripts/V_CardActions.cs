@@ -426,7 +426,14 @@ public class V_CardActions : MonoBehaviour {
             }
             else
             {
-                Destroy (gameObject, 1f);
+                if (gm.ActiveCards.Find(x => gameObject) != null)
+                {
+                    gameObject.tag = "InGrave";
+                }
+                else
+                {
+                    Destroy(gameObject, 1f);
+                }
             }
         }
     }
