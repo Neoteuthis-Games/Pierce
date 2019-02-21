@@ -11,7 +11,7 @@ using UnityEngine.EventSystems;
 /// To clarify some comments, here are the reference for the TERMS:
 /// 
 ///    Our    - Refers to this instance/GameObject (not the main player).
-///    Player - Refers to the player.
+///    Player - Refers to the player. 
 ///    
 ///            Added: 2016
 /// </summary>
@@ -21,15 +21,15 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(V_CardActions))]
 public class V_Card : MonoBehaviour , IPointerClickHandler {
 
-	public enum cardType { Creature, Spell, Generator, Equipment, Virus, Item, Upgrade, Avatar }; //spells are events. will leave it like this for now.
+	public enum cardType { Creature, Event, Generator, Equipment, Virus, Item, Upgrade, Avatar }; //The card type will change how cards are used and have different rules in game.
     public enum cardDomain {None, Animal, Plant, Spirit, Elemental, Fungus, Machine, Nightmare, }; //domains for the cards, generally only creatures will have a domain.
     public enum cardSubDomain {None, Dust, Fire, Water, Lightning, Wind,}; //generally elementals will have subtypes, but others may too.
-    public enum cardRank {Common, Uncommon, Rare, UltraRare, Event}; 
-	public enum cardEffect {None, DrawXCards, AddEnergy, AddHealth, DamagePlayer, DrawuptoXcards, LowerAllSpeed, }; //so many to add here. this will expand alot...
-	public enum cardTarget {None, ToPlayer, ToOpponent};
-	public enum usage {All, CardsOnly, BaseOnly, GeneratorsOnly, };
+    public enum cardRank {Common, Uncommon, Rare, UltraRare, Event}; //this will be used for how common cards are to appear in packs, as rewards etc. Event cards should not appear in packs, unless an event is active.
+	public enum cardEffect {None, DrawXCards, AddEnergy, AddHealth, DamagePlayer, DrawuptoXcards, LowerAllSpeed, }; //so many to add here. this will expand alot... if we keep using it
+	public enum cardTarget {None, ToPlayer, ToOpponent}; //why did they do this? 
+	public enum usage {All, CardsOnly, BaseOnly, GeneratorsOnly, }; //select the target for effects.
     public enum UniqueEffect {None, WebCrawler_OnAttack, }; //expand this list for unique effects. this will get big...
-    public enum UniqueEffectType { None, Constant, Activated, Death, Play, Attack, Convert, Discard, Toss, Purge, Draw, }; 
+    public enum UniqueEffectType { None, Constant, Activated, Death, Play, Attack, Convert, Discard, Toss, Purge, Draw, }; //what causes your effect to activate.
     [Header("    Card Type:")]
 	public cardType type;
     [Header("    Card Domain:")]
@@ -165,7 +165,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
                 energyCost = 0;
             }
             //stop event cards from staying in play. disable this if we ever have a a lasting event.
-			if (type == cardType.Spell && autoUse == false) {
+			if (type == cardType.Event && autoUse == false) {
 				autoUse = true;
 			}
 			if (extraEffect == cardEffect.None) {
@@ -303,7 +303,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
                 }
             }
         }
-		if (type == cardType.Spell) {
+		if (type == cardType.Event) {
 			SpellActivate ();
 		}
 	}
@@ -332,7 +332,7 @@ public class V_Card : MonoBehaviour , IPointerClickHandler {
 				}
 			}
 		}
-		if (type == cardType.Spell) {
+		if (type == cardType.Event) {
 			SpellActivate ();
 		}
 	}

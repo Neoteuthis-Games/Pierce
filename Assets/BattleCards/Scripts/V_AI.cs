@@ -208,7 +208,7 @@ public class V_AI : MonoBehaviour {
 			obj.tag = "AIOwned";
 		} 
 		// ... but if it's a SPELL card:
-		if (card.type == V_Card.cardType.Spell){
+		if (card.type == V_Card.cardType.Event){
 			GameObject obj = Instantiate (card.gameObject, V_GameManager.aiSpellZone.transform) as GameObject;
 			obj.tag = "AIOwned";
 

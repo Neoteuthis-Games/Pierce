@@ -117,7 +117,7 @@ public class V_CardActions : MonoBehaviour {
 			// Let's have the zone flashing effect when this card is dragged over a certain zone.
 
 			//       If this card is a CREATURE card and this card is over the Battle Zone:
-			if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone) && card.type == V_Card.cardType.Creature || IsCursorInZone(Input.mousePosition, V_GameManager.battleZone) && card.type == V_Card.cardType.Spell)
+			if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone) && card.type == V_Card.cardType.Creature || IsCursorInZone(Input.mousePosition, V_GameManager.battleZone) && card.type == V_Card.cardType.Event)
             {
 				Brendrr.color = Color.cyan;
 			}
