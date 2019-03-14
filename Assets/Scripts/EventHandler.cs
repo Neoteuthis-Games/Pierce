@@ -140,5 +140,9 @@ public class EventHandler : MonoBehaviour
     {
         CardDestroyed();
     }
+    public void End()
+    {
+        EndTurn();
+    }
     public static EventHandler GetInstance() { return Eventinstance; }
 }

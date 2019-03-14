@@ -20,6 +20,7 @@ public class mapScript : MonoBehaviour
             float lr = mapSpeed * Input.GetAxis("Mouse X");
             float ud = mapSpeed * Input.GetAxis("Mouse Y");
             transform.Translate(lr, ud, 0);
+            //it needs to add a function that restricts the edge movement so that the map is never getting pulled off screen entirely
         }
         else
         {

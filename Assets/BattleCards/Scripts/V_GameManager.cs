@@ -34,6 +34,7 @@ public class V_GameManager : MonoBehaviour {
     public static int curHealth;
     public static int sEnergy;
     public static int iEnergy;
+    public static string CurrentLocation;
     public static GameObject poof;
     public static GameObject battleZone;
     public static GameObject spellZone;
