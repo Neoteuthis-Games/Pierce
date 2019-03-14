@@ -20,10 +20,11 @@ public class overworldmanagerscript : MonoBehaviour
     {
         locationText.text = V_GameManager.CurrentLocation;
     }
-    void activateArea()
+    public void ActivateArea()
     {
         //ok so for this, activating an area will cause its story to pop up the first time, we need an option to replay story clips.
         //then, there will be a menu akin to the deck selection.
         //this will be the events. once set up, it will play story, then either go into a card game, dungeon, or shop.
+        Debug.Log("click");
     }
 }
