@@ -16,7 +16,7 @@ public class TurnStateCheck : MonoBehaviour
     void Update()
     {
         // public enum currentState { begin, recharge, draw, action, war, end }; //incardgame
-  switch (V_GameManager.cardgamestate)
+  switch (V_GameManager.CardGameState)
         {
             case V_GameManager.currentState.begin:
                 currentphase.text = "begin";

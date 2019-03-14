@@ -21,10 +21,32 @@ public class V_GameManager : MonoBehaviour {
 	// Player types:
 	public enum playerTypes {Player, AI}; //it cycles through the enum, so we'll have to just call player2 AI in 2 player mode.
     // Gamestate types
-    public enum Gamestate {Menu, Overworld, InGame, Gameover, Deckbuilding, Shop, Paused, Story }; //general
+    public enum Gamestate {Menu, Overworld, InGame, Gameover, Deckbuilding, Shop, Paused, Story, Dungeon}; //general
    public enum currentState {begin, recharge, draw, action, war, end}; //incardgame
-
-	[Header("    Game Properties:")]
+   // Some static variables for other script's reference:
+    public static playerTypes playerTurn;
+    public static Gamestate ActiveState;
+    public static currentState CardGameState;
+    public static bool initialsetup = true;
+    public static Text sdamageEffect;
+    public static Text shealEffect;
+    public static int curEnergy;
+    public static int curHealth;
+    public static int sEnergy;
+    public static int iEnergy;
+    public static GameObject poof;
+    public static GameObject battleZone;
+    public static GameObject spellZone;
+    public static GameObject handZone;
+    public static GameObject graveZone;
+    public static GameObject gameArea;
+    public static GameObject avatarZone;
+    public static GameObject aiBattleZone;
+    public static GameObject aiSpellZone;
+    public static GameObject aiAvatarZone;
+    public static GameObject aigraveZone;
+    public static bool allowIncreasingEnergy = false;
+    [Header("    Game Properties:")]
 	public int startingEnergy = 5;			// The starting energy for both players
     public int refreshedEnergy = 5;         // The energy a player is set to during their recharge step
 	public int increasingEnergy = 0;        // Energy increased every turn - unneeded.
@@ -78,28 +100,6 @@ public class V_GameManager : MonoBehaviour {
 	[HideInInspector]
 	public V_Card aiCurSelected;
 
-	// Some static variables for other script's reference:
-	public static playerTypes playerTurn;
-    public static currentState cardgamestate;
-    public static bool initialsetup = true;
-	public static Text sdamageEffect;
-	public static Text shealEffect;
-	public static int curEnergy;
-	public static int curHealth;
-	public static int sEnergy;
-	public static int iEnergy;
-	public static GameObject poof;
-	public static GameObject battleZone;
-	public static GameObject spellZone;
-	public static GameObject handZone;
-    public static GameObject graveZone;
-    public static GameObject gameArea;
-	public static GameObject avatarZone;
-	public static GameObject aiBattleZone;
-	public static GameObject aiSpellZone;
-	public static GameObject aiAvatarZone;
-    public static GameObject aigraveZone;
-    public static bool allowIncreasingEnergy = false;
     [Header("    War Stats:")]
     public int activespeed = 0;
     public bool warentered = false;
@@ -113,45 +113,15 @@ public class V_GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        //need to add handlers for multiple new zones
-		battleZone = battleZoneHandler;
-		spellZone = spellZoneHandler;
-		handZone = handZoneHandler;
-		gameArea = gameAreaHandler;
-        graveZone = graveZoneHandler;
-		aiBattleZone = aiBattleZoneHandler;
-		aiSpellZone = aiSpellZoneHandler;
-		aiAvatarZone = aiAvatarHandler;
-        aigraveZone = aigraveZoneHandler;
-		avatarZone = avatarHandler;
-		sdamageEffect = damageEffect;
-		shealEffect = healEffect;
-        if(drawCostText != null)
-		drawCostText.text = drawCost.ToString ();
-
-		// Draw the first hand cards:
-		playerTurn = playerTypes.Player;
-		p.gm = this;
-        cardgamestate = currentState.draw;
-        //this is what we need to use to set the health to the size of the deck. we can disable it for now.
-       // V_PlayerHandler.health = p.myDeck.Length;
-		//p.StartDraw ();//we can disable this for now. if we have effects that only trigger in starting hand we can readd.
-        for (int i = 0; i < startinghand; i++)
-        {
-            p.DrawOneCard();
-        }
-
+       
+        DontDestroyOnLoad(gameObject); //its always here
 
     }
-
-	void Awake(){
+    //if broken revert to an awake function. MAKE SURE TO CALL!!
+	public void EnterGame(){
 		// References:
 		p = FindObjectOfType<V_PlayerHandler>();
 		gm = FindObjectOfType<V_GameManager> ();
-
-		//Set the player to Game Mode:
-		V_PlayerHandler.isInGame = true;
-
 		// Set the player's starting life and energy:
 		V_PlayerHandler.health = startingHealth;
 		V_PlayerHandler.energy = startingEnergy;
@@ -160,135 +130,171 @@ public class V_GameManager : MonoBehaviour {
 
 		sEnergy = startingEnergy;
 		iEnergy = increasingEnergy;
-      
+        //need to add handlers for multiple new zones
+        battleZone = battleZoneHandler;
+        spellZone = spellZoneHandler;
+        handZone = handZoneHandler;
+        gameArea = gameAreaHandler;
+        graveZone = graveZoneHandler;
+        aiBattleZone = aiBattleZoneHandler;
+        aiSpellZone = aiSpellZoneHandler;
+        aiAvatarZone = aiAvatarHandler;
+        aigraveZone = aigraveZoneHandler;
+        avatarZone = avatarHandler;
+        sdamageEffect = damageEffect;
+        shealEffect = healEffect;
+
+        if (drawCostText != null)
+            drawCostText.text = drawCost.ToString();
+
+        // Draw the first hand cards:
+        playerTurn = playerTypes.Player;
+        p.gm = this;
+        CardGameState = currentState.draw;
+        //this is what we need to use to set the health to the size of the deck. we can disable it for now.
+        // V_PlayerHandler.health = p.myDeck.Length;
+        //p.StartDraw ();//we can disable this for now. if we have effects that only trigger in starting hand we can readd.
+        for (int i = 0; i < startinghand; i++)
+        {
+            p.DrawOneCard();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        curEnergy = V_PlayerHandler.energy;
-        curHealth = V_PlayerHandler.health;
-
-        energyText.text = curEnergy.ToString();
-        aiHpText.text = V_AI.health.ToString() + "/" + maxHealth;
-        hpText.text = curHealth.ToString() + "/" + maxHealth;
-
-        // Check if all players still have sufficient health, but
-        // if one doesn't then call the CallGameResult function:
-        if (!isGameOver)
+        if (ActiveState == Gamestate.InGame)
         {
-            // if the player's base died:
-            if (V_PlayerHandler.health == 0)
+            if(battleZone == null)
             {
-                isGameOver = true;
-                // then AI is the winner:
-                CallGameResult(false);
-                return;
+                EnterGame();
             }
-            // if the AI's base died:
-            if (V_AI.health == 0)
+            curEnergy = V_PlayerHandler.energy;
+            curHealth = V_PlayerHandler.health;
+
+            energyText.text = curEnergy.ToString();
+            aiHpText.text = V_AI.health.ToString() + "/" + maxHealth;
+            hpText.text = curHealth.ToString() + "/" + maxHealth;
+
+            // Check if all players still have sufficient health, but
+            // if one doesn't then call the CallGameResult function:
+            if (!isGameOver)
             {
-                isGameOver = true;
-                // then player is the winner:
-                CallGameResult(true);
+                // if the player's base died:
+                if (V_PlayerHandler.health == 0)
+                {
+                    isGameOver = true;
+                    // then AI is the winner:
+                    CallGameResult(false);
+                    ActiveState = Gamestate.Gameover;
+                    return;
+                }
+                // if the AI's base died:
+                if (V_AI.health == 0)
+                {
+                    isGameOver = true;
+                    // then player is the winner:
+                    CallGameResult(true);
+                    
+                }
             }
-        }
 
-        opponentsTurnText.gameObject.SetActive(playerTurn == playerTypes.AI && !isGameOver);
-        playersTurnText.gameObject.SetActive(playerTurn == playerTypes.Player && !isGameOver);
+            opponentsTurnText.gameObject.SetActive(playerTurn == playerTypes.AI && !isGameOver);
+            playersTurnText.gameObject.SetActive(playerTurn == playerTypes.Player && !isGameOver);
 
-        //warloop, can become a switch case to manage all turns parts.
-        if (cardgamestate == currentState.war)
-        {
-            int usagecheck = 0;
-            if (warentered == false) //war setup
+            //warloop, can become a switch case to manage all turns parts.
+            if (CardGameState == currentState.war)
             {
-                GameObject[] objP = GameObject.FindGameObjectsWithTag("PlayerOwned");
-                GameObject[] objA = GameObject.FindGameObjectsWithTag("AIOwned");
-                //create a list of active cards
-                for (int i = 0; i < objA.Length; i++)
+                int usagecheck = 0;
+                if (warentered == false) //war setup
                 {
-                    ActiveCards.Add(objA[i]);
-                    if (playerTurn == playerTypes.AI)
+                    GameObject[] objP = GameObject.FindGameObjectsWithTag("PlayerOwned");
+                    GameObject[] objA = GameObject.FindGameObjectsWithTag("AIOwned");
+                    //create a list of active cards
+                    for (int i = 0; i < objA.Length; i++)
                     {
-                        objA[i].GetComponent<V_Card>().TEMPspeed += 5;
+                        ActiveCards.Add(objA[i]);
+                        if (playerTurn == playerTypes.AI)
+                        {
+                            objA[i].GetComponent<V_Card>().TEMPspeed += 5;
+                        }
                     }
-                }
-                for (int i = 0; i < objP.Length; i++)
-                {
-                    ActiveCards.Add(objP[i]);
-                    if (playerTurn == playerTypes.Player)
+                    for (int i = 0; i < objP.Length; i++)
                     {
-                        objP[i].GetComponent<V_Card>().TEMPspeed += 5;
+                        ActiveCards.Add(objP[i]);
+                        if (playerTurn == playerTypes.Player)
+                        {
+                            objP[i].GetComponent<V_Card>().TEMPspeed += 5;
+                        }
                     }
+                    warentered = true;
+                    //find the first creatures to act...
+                    foreach (GameObject o in ActiveCards)
+                    {
+                        if (o.GetComponent<V_Card>().speed > activespeed && o.GetComponent<V_Card>().speed < prevspeed)
+                        {
+                            activespeed = o.GetComponent<V_Card>().speed;
+                        }
+
+                        if (o.GetComponent<V_Card>().speed == activespeed && o.GetComponent<V_Card>().actions > 0)
+                        {
+                            o.GetComponent<V_CardActions>().isActive = true;
+                            usagecheck++;
+
+                        }
+                        else
+                        {
+                            o.GetComponent<V_CardActions>().isActive = false;
+                        }
+                    }
+                    prevspeed = activespeed;
                 }
-                warentered = true;
-                //find the first creatures to act...
+                //now to flow through each round;
+                usagecheck = 0;
                 foreach (GameObject o in ActiveCards)
                 {
-                    if (o.GetComponent<V_Card>().speed > activespeed && o.GetComponent<V_Card>().speed < prevspeed)
-                    {
-                        activespeed = o.GetComponent<V_Card>().speed;
-                    }
-
                     if (o.GetComponent<V_Card>().speed == activespeed && o.GetComponent<V_Card>().actions > 0)
                     {
                         o.GetComponent<V_CardActions>().isActive = true;
                         usagecheck++;
-
                     }
                     else
                     {
                         o.GetComponent<V_CardActions>().isActive = false;
                     }
                 }
-                prevspeed = activespeed;
-            }
-            //now to flow through each round;
-            usagecheck = 0;
-            foreach (GameObject o in ActiveCards)
-            {
-                if (o.GetComponent<V_Card>().speed == activespeed && o.GetComponent<V_Card>().actions > 0)
+                if (usagecheck <= 0)
                 {
-                    o.GetComponent<V_CardActions>().isActive = true;
-                    usagecheck++;
+                    activespeed -= 5;
                 }
-                else
+                if (activespeed <= 0)
                 {
-                    o.GetComponent<V_CardActions>().isActive = false;
+                    prevspeed = 1000;
+                    ActiveCards.Clear();
+                    CardGameState = currentState.end;
                 }
             }
-            if (usagecheck <= 0)
+            if (CardGameState == currentState.end)
             {
-                activespeed -= 5;
-            }
-            if (activespeed <= 0)
-            {
-                prevspeed = 1000;
+                GameObject[] objP = GameObject.FindGameObjectsWithTag("PlayerOwned");
+                GameObject[] objA = GameObject.FindGameObjectsWithTag("AIOwned");
+                for (int i = 0; i < objA.Length; i++)
+                {
+                    ActiveCards.Add(objA[i]);
+                }
+                for (int i = 0; i < objP.Length; i++)
+                {
+                    ActiveCards.Add(objP[i]);
+                }
                 ActiveCards.Clear();
-                cardgamestate = currentState.end;
-            }
-        }
-        if (cardgamestate == currentState.end)
-        {
-            GameObject[] objP = GameObject.FindGameObjectsWithTag("PlayerOwned");
-            GameObject[] objA = GameObject.FindGameObjectsWithTag("AIOwned");
-            for (int i = 0; i < objA.Length; i++)
-            {
-                ActiveCards.Add(objA[i]);
-            }
-            for (int i = 0; i < objP.Length; i++)
-            {
-                ActiveCards.Add(objP[i]);
-            }
-            ActiveCards.Clear();
-            //if (playerTurn == playerTypes.AI)
-            //{
-            //    ChangeTurn(playerTypes.AI);
-            //}
-            if (playerTurn == playerTypes.Player)
-            {
-                ChangeTurn(playerTypes.Player);
+                //if (playerTurn == playerTypes.AI)
+                //{
+                //    ChangeTurn(playerTypes.AI);
+                //}
+                if (playerTurn == playerTypes.Player)
+                {
+                    ChangeTurn(playerTypes.Player);
+                }
             }
         }
     }
@@ -300,7 +306,7 @@ public class V_GameManager : MonoBehaviour {
         if (type == playerTypes.AI)
         {
 
-            cardgamestate = currentState.begin;
+            CardGameState = currentState.begin;
             allowIncreasingEnergy = true;
             playerTurn = playerTypes.Player;
             gm.endTurnBTN.SetActive(true);
@@ -309,7 +315,7 @@ public class V_GameManager : MonoBehaviour {
 
             //check for begin turn effects here
 
-            cardgamestate = currentState.recharge;
+            CardGameState = currentState.recharge;
 
             if (allowIncreasingEnergy)
             {
@@ -320,27 +326,27 @@ public class V_GameManager : MonoBehaviour {
             {
                 //make players discard down to 7 cards.
             }
-            V_GameManager.cardgamestate = V_GameManager.currentState.draw;
+            V_GameManager.CardGameState = V_GameManager.currentState.draw;
             //////////////////////////////////////
             //now its talking about the AI turn. lets ignore this for now.
         }
         else if (type == playerTypes.Player)
         {
-            cardgamestate = currentState.begin;
-            cardgamestate = currentState.recharge;
+            CardGameState = currentState.begin;
+            CardGameState = currentState.recharge;
             if (allowIncreasingEnergy)
             {
                 V_AI.energy = 5;//EffectAddEnergy (iEnergy);
             }
             allowIncreasingEnergy = true;
             playerTurn = playerTypes.AI;
-            V_GameManager.cardgamestate = V_GameManager.currentState.draw;
+            V_GameManager.CardGameState = V_GameManager.currentState.draw;
             RefreshField();
             //         GameObject[] obj = GameObject.FindGameObjectsWithTag ("AIOwned");
             //foreach (GameObject o in obj) {
             //	o.GetComponent<V_CardActions> ().isUsed = false;
             //}
-            V_GameManager.cardgamestate = V_GameManager.currentState.action;
+            V_GameManager.CardGameState = V_GameManager.currentState.action;
         }
     }
 	/// <summary>
@@ -453,7 +459,7 @@ public class V_GameManager : MonoBehaviour {
 
 	public void PlayerRedraw(){//the deck links to this. 
         //change this into drawing up to twice during the draw phase.
-        if (V_GameManager.cardgamestate == V_GameManager.currentState.draw)// || initialsetup == true)
+        if (V_GameManager.CardGameState == V_GameManager.currentState.draw)// || initialsetup == true)
         {
             freedraws--;
             if (freedraws > 0)
@@ -462,7 +468,7 @@ public class V_GameManager : MonoBehaviour {
             } else
             {
                 p.DrawOneCard();
-                V_GameManager.cardgamestate++;
+                V_GameManager.CardGameState++;
             }
         } else if(effectdraw > 0)
         {
@@ -473,16 +479,16 @@ public class V_GameManager : MonoBehaviour {
 	}
 
 	public void PlayerEndturn(){
-        cardgamestate = 0;
+        CardGameState = 0;
         freedraws = freedrawnum;
         p.EndTurn ();
 	}
 
     public void EndPhase()
     {
-        if(cardgamestate!= currentState.end)
+        if(CardGameState!= currentState.end)
         {
-            cardgamestate++;
+            CardGameState++;
         } else
         {
             PlayerEndturn();

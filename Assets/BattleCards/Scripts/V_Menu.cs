@@ -28,8 +28,8 @@ public class V_Menu : MonoBehaviour {
 	public Transform deckButtonsHandler;
 
 	void Awake(){
-		// Set the player to Menu Mode;
-		V_PlayerHandler.isInGame = false;
+        // Set the player to Menu Mode;
+        V_GameManager.ActiveState = V_GameManager.Gamestate.Menu;
 	}
 	void Update(){
 

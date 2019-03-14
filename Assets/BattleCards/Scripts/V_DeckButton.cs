@@ -28,6 +28,7 @@ public class V_DeckButton : MonoBehaviour {
 
 	public void Click(){
 		V_PlayerHandler.selectedDeck = theDeck;
+        V_GameManager.ActiveState = V_GameManager.Gamestate.InGame;
 		mainMenu.GoTo ("InGame");
 	}
 }

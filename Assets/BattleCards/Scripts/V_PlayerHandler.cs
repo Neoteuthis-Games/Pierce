@@ -27,20 +27,19 @@ public class V_PlayerHandler : MonoBehaviour {
 	// The following variables are to be managed by the V_GameManager script...
 	public static int health = 0;
 	public static int energy = 0;
-	public static bool isInGame = false;
 
 	// Internal:
 	[HideInInspector] public V_GameManager gm;
 	V_CardCollections dtbase;
 
 	void Awake(){
-		DontDestroyOnLoad (gameObject);
+		DontDestroyOnLoad (gameObject); //its always here
 	}
 
 	// Update is called once per frame
 	void Update () {
 		// *When in main menu:
-		if (!isInGame) {
+		if (V_GameManager.ActiveState != V_GameManager.Gamestate.InGame) {
 			// Find the card collections in main menu if we haven't cached it yet:
 			if (!dtbase) {
 				dtbase = GameObject.FindObjectOfType <V_CardCollections> ();

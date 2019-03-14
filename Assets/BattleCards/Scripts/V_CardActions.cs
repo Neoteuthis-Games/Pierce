@@ -68,7 +68,7 @@ public class V_CardActions : MonoBehaviour {
         {
             card.inactiveEffect.SetActive(false);
         }
-        if (V_GameManager.cardgamestate == V_GameManager.currentState.war && card.actions <= 0)
+        if (V_GameManager.CardGameState == V_GameManager.currentState.war && card.actions <= 0)
         {
             card.inactiveEffect.SetActive(true);
         }
@@ -158,7 +158,7 @@ public class V_CardActions : MonoBehaviour {
 					if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone)) {
 						Debug.Log ("It's a Creature!");
 						if (card.energyCost <= V_PlayerHandler.energy) {
-							if (gm.battleZoneHandler.transform.childCount < fieldlimit && V_GameManager.cardgamestate == V_GameManager.currentState.action) {
+							if (gm.battleZoneHandler.transform.childCount < fieldlimit && V_GameManager.CardGameState == V_GameManager.currentState.action) {
 								V_PlayerHandler.energy -= card.energyCost;
 								transform.SetParent (V_GameManager.battleZone.transform);
 								curParent = V_GameManager.battleZone.transform;
@@ -193,7 +193,7 @@ public class V_CardActions : MonoBehaviour {
 			} else {
 				if (curParent == V_GameManager.handZone.transform) {
 					if (IsCursorInZone (Input.mousePosition, V_GameManager.battleZone)) {
-						if (card.energyCost <= V_PlayerHandler.energy && V_GameManager.cardgamestate == V_GameManager.currentState.action) {
+						if (card.energyCost <= V_PlayerHandler.energy && V_GameManager.CardGameState == V_GameManager.currentState.action) {
 							V_PlayerHandler.energy -= card.energyCost;
 							transform.SetParent (V_GameManager.battleZone.transform);
 							curParent = V_GameManager.battleZone.transform;
@@ -226,7 +226,7 @@ public class V_CardActions : MonoBehaviour {
 	// Player card selecting actions:
 	public void Select(){
 		if (!isUsed && gameObject.tag == "PlayerOwned" && V_GameManager.playerTurn == V_GameManager.playerTypes.Player) {
-            if (V_GameManager.cardgamestate == V_GameManager.currentState.war)
+            if (V_GameManager.CardGameState == V_GameManager.currentState.war)
             {
                 if (isSelected || isActive == false)
                 {
@@ -282,7 +282,7 @@ public class V_CardActions : MonoBehaviour {
         Debug.Log ("Player attacked!");
 
 		if (target.gameObject.tag == "AIOwned" && this.tag == "PlayerOwned") {
-			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.cardgamestate == V_GameManager.currentState.war) {
+			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.CardGameState == V_GameManager.currentState.war) {
                 AttackEffect(target, null);
                 // Enemy damaged effect:
                 Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
@@ -304,7 +304,7 @@ public class V_CardActions : MonoBehaviour {
 			}
 		}
 		if (target.gameObject.tag == "PlayerOwned" && this.tag == "AIOwned") {
-			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.cardgamestate == V_GameManager.currentState.war) {
+			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.CardGameState == V_GameManager.currentState.war) {
 				Debug.Log ("AI attacked!");
                 AttackEffect(target, null);
 				// Enemy damaged effect:
@@ -377,8 +377,8 @@ public class V_CardActions : MonoBehaviour {
         thisCard.isAttacking = true;
 		Debug.Log ("AI attacked!");
 		if (target.tag == "Player") {
-            V_GameManager.cardgamestate = V_GameManager.currentState.war; //testing
-            if (thisCard.type == V_Card.cardType.Creature && V_GameManager.cardgamestate == V_GameManager.currentState.war) {
+            V_GameManager.CardGameState = V_GameManager.currentState.war; //testing
+            if (thisCard.type == V_Card.cardType.Creature && V_GameManager.CardGameState == V_GameManager.currentState.war) {
                 AttackEffect(null, target);
 				// Enemy damaged effect:
 				Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
@@ -396,7 +396,7 @@ public class V_CardActions : MonoBehaviour {
 			}
 		}
 		if (target.tag == "AIPlayer") {
-			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.cardgamestate == V_GameManager.currentState.war) {
+			if (thisCard.type == V_Card.cardType.Creature && V_GameManager.CardGameState == V_GameManager.currentState.war) {
                 AttackEffect(null, target);
                 // Enemy damaged effect:
                 Text enemy = Instantiate (V_GameManager.sdamageEffect, target.transform) as Text;
