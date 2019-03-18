@@ -5,6 +5,8 @@ using UnityEngine;
 public class areascript : MonoBehaviour
 {
     public string mylocation = "TOP SECRET AREA";
+    public string locationTag = "Area1";
+    public overworldmanagerscript.LevelType mytype = overworldmanagerscript.LevelType.Duel;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +24,10 @@ public class areascript : MonoBehaviour
         //If your mouse hovers over the GameObject with the script attached, output this message
         Debug.Log("Mouse is over GameObject.");
         V_GameManager.CurrentLocation = mylocation;
+    }
+   void OnMouseDown()
+    {
+        overworldmanagerscript.ActivateArea(mylocation, locationTag, mytype);
     }
 
     void OnMouseExit()
