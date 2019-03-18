@@ -21,11 +21,11 @@ public class V_GameManager : MonoBehaviour {
 	// Player types:
 	public enum playerTypes {Player, AI}; //it cycles through the enum, so we'll have to just call player2 AI in 2 player mode.
     // Gamestate types
-    public enum Gamestate {Menu, Overworld, InGame, Gameover, Deckbuilding, Shop, Paused, Story, Dungeon}; //general
+   
    public enum currentState {begin, recharge, draw, action, war, end}; //incardgame
    // Some static variables for other script's reference:
     public static playerTypes playerTurn;
-    public static Gamestate ActiveState;
+
     public static currentState CardGameState;
     public static bool initialsetup = true;
     public static Text sdamageEffect;
@@ -193,7 +193,7 @@ public class V_GameManager : MonoBehaviour {
                     isGameOver = true;
                     // then AI is the winner:
                     CallGameResult(false);
-                    ActiveState = Gamestate.Gameover;
+                    GameManager.ActiveState = GameManager.Gamestate.Gameover;
                     return;
                 }
                 // if the AI's base died:

@@ -29,7 +29,7 @@ public class V_Menu : MonoBehaviour {
 
 	void Awake(){
         // Set the player to Menu Mode;
-        V_GameManager.ActiveState = V_GameManager.Gamestate.Menu;
+        GameManager.ActiveState = GameManager.Gamestate.Menu;
 	}
 	void Update(){
 

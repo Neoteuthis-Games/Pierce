@@ -36,12 +36,12 @@ public class V_DeckButton : MonoBehaviour {
         V_PlayerHandler.selectedDeck = theDeck;
         if (campaignEntry == false)
         {
-            V_GameManager.ActiveState = V_GameManager.Gamestate.InGame;
+            GameManager.ActiveState = GameManager.Gamestate.InGame;
             mainMenu.GoTo("InGame");
         }
         else
         {
-            V_GameManager.ActiveState = V_GameManager.Gamestate.Overworld;
+            GameManager.ActiveState = GameManager.Gamestate.Overworld;
             mainMenu.GoTo("Overworld_Airam");
         }
     }

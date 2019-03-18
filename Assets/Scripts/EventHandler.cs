@@ -29,7 +29,6 @@ public class EventHandler : MonoBehaviour
     public static event OtherAction UnPause;
     public static event OtherAction Scroll;
     public static EventHandler Eventinstance;
-    public V_GameManager GameManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,40 +45,40 @@ public class EventHandler : MonoBehaviour
         if (true)
             if (Input.GetKey(KeyCode.W))
             {
-                if (V_GameManager.ActiveState == V_GameManager.Gamestate.Dungeon)
+                if (GameManager.ActiveState == GameManager.Gamestate.Dungeon)
                 {
                     MoveUp();
                 }
             }
         if (Input.GetKey(KeyCode.S))
         {
-            if (V_GameManager.ActiveState == V_GameManager.Gamestate.Dungeon)
+            if (GameManager.ActiveState == GameManager.Gamestate.Dungeon)
             {
                 MoveDown();
             }
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
-            if (V_GameManager.ActiveState == V_GameManager.Gamestate.Dungeon)
+            if (GameManager.ActiveState == GameManager.Gamestate.Dungeon)
             {
                 MoveRight();
             }
         }
         if (Input.GetKey(KeyCode.A))
         {
-            if (V_GameManager.ActiveState == V_GameManager.Gamestate.Dungeon)
+            if (GameManager.ActiveState == GameManager.Gamestate.Dungeon)
             {
                 MoveLeft();
             }
         }
-        if (V_GameManager.ActiveState == V_GameManager.Gamestate.Dungeon && Input.GetKey(KeyCode.A) == false && Input.GetKey(KeyCode.D) == false && Input.GetKey(KeyCode.W) == false && Input.GetKey(KeyCode.S) == false)
+        if (GameManager.ActiveState == GameManager.Gamestate.Dungeon && Input.GetKey(KeyCode.A) == false && Input.GetKey(KeyCode.D) == false && Input.GetKey(KeyCode.W) == false && Input.GetKey(KeyCode.S) == false)
         {
             Idle();
         }
        
         if (Input.GetKey(KeyCode.E))
         {
-            if (V_GameManager.ActiveState == V_GameManager.Gamestate.Dungeon)
+            if (GameManager.ActiveState == GameManager.Gamestate.Dungeon)
             {
                 Scan();
             }
@@ -87,20 +86,20 @@ public class EventHandler : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.P) || Input.GetKeyUp(KeyCode.Escape))
         {
 
-            if (V_GameManager.ActiveState == V_GameManager.Gamestate.Dungeon)
+            if (GameManager.ActiveState == GameManager.Gamestate.Dungeon)
             {
-                V_GameManager.ActiveState = V_GameManager.Gamestate.Paused;
+                GameManager.ActiveState = GameManager.Gamestate.Paused;
                 Pause();
             }
-            if (V_GameManager.ActiveState == V_GameManager.Gamestate.Paused)
+            if (GameManager.ActiveState == GameManager.Gamestate.Paused)
             {
-                V_GameManager.ActiveState = V_GameManager.Gamestate.Dungeon;
+                GameManager.ActiveState = GameManager.Gamestate.Dungeon;
                 UnPause();
             }
         }
         if (Input.GetKey(KeyCode.Space))
         {
-            if (V_GameManager.ActiveState == V_GameManager.Gamestate.InGame)
+            if (GameManager.ActiveState == GameManager.Gamestate.InGame)
             {
                 //pause the card game so players can read cards or respond to an action
                 Interrupt();
@@ -108,7 +107,7 @@ public class EventHandler : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(0))
         {
-            if (V_GameManager.ActiveState == V_GameManager.Gamestate.Story)
+            if (GameManager.ActiveState == GameManager.Gamestate.Story)
             {
                 //go to the next dialogue box or end story scene.
                 Scroll();
@@ -116,7 +115,7 @@ public class EventHandler : MonoBehaviour
         }
         if (Input.GetMouseButtonDown(1))
         {
-            if (V_GameManager.ActiveState == V_GameManager.Gamestate.InGame)
+            if (GameManager.ActiveState == GameManager.Gamestate.InGame)
             {
                 //will show an enlarged version of the selected card
                 CardViewed();

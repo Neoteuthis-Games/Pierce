@@ -387,7 +387,8 @@ public class V_CardActions : MonoBehaviour {
                 V_PlayerHandler.health -= thisCard.energyCost; //this can be changed to make people discard from the deck instead.
                 for (int i = thisCard.energyCost; i > 0; i--)
                 {
-                  target.GetComponent<V_PlayerHandler>().TakeDamage();//null???
+                    if(V_PlayerHandler.health > 0)
+                  target.GetComponent<V_PlayerHandler>().TakeDamage();//returns null after a player has lost.
                 }
 
                 thisCard.DoEffect();

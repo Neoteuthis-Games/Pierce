@@ -39,7 +39,7 @@ public class V_PlayerHandler : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// *When in main menu:
-		if (V_GameManager.ActiveState != V_GameManager.Gamestate.InGame) {
+		if (GameManager.ActiveState != GameManager.Gamestate.InGame) {
 			// Find the card collections in main menu if we haven't cached it yet:
 			if (!dtbase) {
 				dtbase = GameObject.FindObjectOfType <V_CardCollections> ();
