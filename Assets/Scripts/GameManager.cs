@@ -17,4 +17,8 @@ public class GameManager : MonoBehaviour
     {
         
     }
+   public static void AddToCollection(string cardName)
+    {
+        ///add a card naamed cardname to the player's collection
+    }
 }

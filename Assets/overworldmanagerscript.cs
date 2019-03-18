@@ -10,7 +10,7 @@ public class overworldmanagerscript : MonoBehaviour
     [Header("    This Right Here:")]
     public static GameObject MasterScene;
     public GameObject dialoguescene;
-    public enum LevelType {Dungeon, Duel, Shop, Story};
+    public enum LevelType {Dungeon, Duel, Shop, Story, Item};
     //get what the button pressed will load in and preview it to the player.
     public static string LevelName;
     public static LevelType levelToEnter; 
@@ -44,6 +44,10 @@ public class overworldmanagerscript : MonoBehaviour
                 break;
             case LevelType.Story:
                 MasterScene.SetActive(true);
+                break;
+            case LevelType.Item:
+                GameManager.AddToCollection(leveltag);
+                //MasterScene.dialog ///i can't remember what I was going to say here, but it needs to say congrats you found X.
                 break;
             default:
                 break;
