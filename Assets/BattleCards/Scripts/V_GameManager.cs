@@ -115,11 +115,11 @@ public class V_GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
        
-        DontDestroyOnLoad(gameObject); //its always here
+       // DontDestroyOnLoad(gameObject); //its always here
 
-    }
+   // }
     //if broken revert to an awake function. MAKE SURE TO CALL!!
-	public void EnterGame(){
+	//public void EnterGame(){
 		// References:
 		p = FindObjectOfType<V_PlayerHandler>();
 		gm = FindObjectOfType<V_GameManager> ();
@@ -161,15 +161,21 @@ public class V_GameManager : MonoBehaviour {
         }
     }
 
+    public void QuitGame()
+    {
+        //battleZone = null;
+        V_PlayerHandler.health = 0;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (ActiveState == Gamestate.InGame)
-        {
-            if(battleZone == null)
-            {
-                EnterGame();
-            }
+        //if (ActiveState == Gamestate.InGame)
+        //{
+            //if(battleZone == null)
+            //{
+            //   // EnterGame();
+            //}
             curEnergy = V_PlayerHandler.energy;
             curHealth = V_PlayerHandler.health;
 
@@ -297,7 +303,7 @@ public class V_GameManager : MonoBehaviour {
                     ChangeTurn(playerTypes.Player);
                 }
             }
-        }
+        //}
     }
     // This is called when a player hits the "End Turn" button:
     public void ChangeTurn(playerTypes type)
@@ -456,6 +462,7 @@ public class V_GameManager : MonoBehaviour {
 		} else {
 			banner.sprite = failedBanner;
 		}
+        battleZone = null;
 	}
 
 	public void PlayerRedraw(){//the deck links to this. 
